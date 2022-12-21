@@ -2,12 +2,17 @@
 #include <cstdlib>
 #include <math.h>
 #include <vector>
+#include <list>
 #include "collision.h"
 #include <utility>
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(750, 600), "JAMP, Come in!");
+    sf::View view = window.getDefaultView();
+    sf::Clock clock;
+    sf::Time prevTime = clock.getElapsedTime();
+    sf::Time currTime;
     sf::CircleShape shape(25.f);
     sf::RectangleShape wall(sf::Vector2f(100.0f, 20.0f));
     sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
@@ -24,12 +29,21 @@ int main()
     wall.setFillColor(sf::Color::Black);
     //can't make this an unordered set yet, but is more efficient. Need a hash function for pair of pointers.
     //std::unordered_set<std::pair<sf::CircleShape*, int*>> independents;
-    std::vector < std::pair < sf::CircleShape*, float*>> independents;
+    std::list<std::pair<sf::CircleShape*, float*>> independents;
     int direction[] = { 0, 0, 0, 0 };
+    int prevDirection[] = { 0,0,0,0 };
     //up, down, left, right
-    float speed = 0.3f;
+    float speed = 500.f;
     while (window.isOpen())
     {
+        if (direction[0] + direction[1] + direction[2] + direction[3] >= 0.0001f) {
+            for (int i = 0; i < 4; i++)
+                prevDirection[i] = direction[i];
+        }
+        view.setCenter(shape.getPosition());
+        currTime = clock.getElapsedTime();
+        sf::Time elapsed = currTime - prevTime;
+        prevTime = currTime;
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -55,8 +69,14 @@ int main()
                     speed /= 1.2f;
                 if (event.key.code == sf::Keyboard::Space) {
                     float* ballisticInfo = new float[5];
-                    for (int i = 0; i < 4; i++) {
-                        ballisticInfo[i] = direction[i];
+                    if (direction[0] + direction[1] + direction[2] + direction[3] <= 0.0001f) {
+                        for (int i = 0; i < 4; i++)
+                            ballisticInfo[i] = prevDirection[i];
+                    }
+                    else {
+                        for (int i = 0; i < 4; i++) {
+                            ballisticInfo[i] = direction[i];
+                        }
                     }
                     ballisticInfo[4] = speed;
                     sf::CircleShape* shot = new sf::CircleShape(15.0f);
@@ -86,12 +106,12 @@ int main()
         window.clear(sf::Color::White);
         if (speed < 0.01f)
             speed = 0.01f;
-        for (int i = 0; i < independents.size(); i++) {
-            sf::Vector2f curPos = independents[i].first->getPosition();
-            sf::Vector2f nextPos = independents[i].first->getPosition();
+        for (auto it = independents.begin(); it != independents.end(); it++) {
+            sf::Vector2f curPos = it->first->getPosition();
+            sf::Vector2f nextPos = it->first->getPosition();
 
-            float xdiff = (independents[i].second[3] - independents[i].second[2]) * speed;
-            float ydiff = (independents[i].second[1] - independents[i].second[0]) * speed;
+            float xdiff = (it->second[3] - it->second[2]) * it->second[4] * elapsed.asSeconds();
+            float ydiff = (it->second[1] - it->second[0]) * it->second[4] * elapsed.asSeconds();
 
             if (abs(xdiff) >= 0.0001 && abs(ydiff) >= 0.0001) {
                 xdiff = xdiff / 1.414f;
@@ -99,14 +119,14 @@ int main()
             }
             nextPos.x += xdiff;
             nextPos.y += ydiff;
-            independents[i].first->setPosition(nextPos);
-            window.draw(*(independents[i].first));
+            it->first->setPosition(nextPos);
+            window.draw(*(it->first));
         }
         //shape moves
         sf::Vector2f nextPos = shape.getPosition();
         sf::Vector2f curPos = shape.getPosition();
-        float xdiff = (direction[3] - direction[2]) * speed;
-        float ydiff = (direction[1] - direction[0]) * speed;
+        float xdiff = (direction[3] - direction[2]) * speed * elapsed.asSeconds();
+        float ydiff = (direction[1] - direction[0]) * speed * elapsed.asSeconds();
         float circleRadius = shape.getRadius();
         if (abs(xdiff) >= 0.0001 && abs(ydiff) >= 0.0001) {
             xdiff = xdiff / 1.414f;
@@ -146,7 +166,12 @@ int main()
         window.draw(shape2);
         window.draw(wall);
         window.draw(wall2);
+        window.setView(view);
         window.display();
+    }
+    for (auto it = independents.begin(); it != independents.end(); it++) {
+        delete it->first;
+        delete [] it->second;
     }
 
     return 0;
