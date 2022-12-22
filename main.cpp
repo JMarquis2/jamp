@@ -5,6 +5,8 @@
 #include <list>
 #include "collision.h"
 #include <utility>
+#include <iterator>
+#include "moves.h"
 
 int main()
 {
@@ -30,6 +32,9 @@ int main()
     //can't make this an unordered set yet, but is more efficient. Need a hash function for pair of pointers.
     //std::unordered_set<std::pair<sf::CircleShape*, int*>> independents;
     std::list<std::pair<sf::CircleShape*, float*>> independents;
+    std::list<std::list<std::pair<sf::CircleShape*, float*>>::iterator> deleteReady;
+    std::list<sf::Transformable*> obstacles;
+    obstacles.push_back(&wall);
     int direction[] = { 0, 0, 0, 0 };
     int prevDirection[] = { 0,0,0,0 };
     //up, down, left, right
@@ -103,10 +108,15 @@ int main()
                 }
             }
         }
+        if (speed < 0)
+            speed = 0;
         window.clear(sf::Color::White);
-        if (speed < 0.01f)
-            speed = 0.01f;
         for (auto it = independents.begin(); it != independents.end(); it++) {
+            bool collided = movesWithCollision(it->first, it->second, &elapsed, &obstacles, &window);
+            if (collided) {
+                deleteReady.push_back(it);
+            }
+            /*
             sf::Vector2f curPos = it->first->getPosition();
             sf::Vector2f nextPos = it->first->getPosition();
 
@@ -121,35 +131,23 @@ int main()
             nextPos.y += ydiff;
             it->first->setPosition(nextPos);
             window.draw(*(it->first));
+            */
         }
+        auto curDelete = deleteReady.begin();
+        for (int i = 0; i < deleteReady.size(); i++) {
+            delete (*curDelete)->first;
+            delete(*curDelete)->second;
+            independents.erase(*curDelete);
+            curDelete++;
+        }
+        deleteReady.clear();
         //shape moves
-        sf::Vector2f nextPos = shape.getPosition();
-        sf::Vector2f curPos = shape.getPosition();
-        float xdiff = (direction[3] - direction[2]) * speed * elapsed.asSeconds();
-        float ydiff = (direction[1] - direction[0]) * speed * elapsed.asSeconds();
-        float circleRadius = shape.getRadius();
-        if (abs(xdiff) >= 0.0001 && abs(ydiff) >= 0.0001) {
-            xdiff = xdiff / 1.414f;
-            ydiff = ydiff / 1.414f;
+        float* shapeMoveInfo = new float[5];
+        for (int i = 0; i < 4; i++) {
+            shapeMoveInfo[i] = direction[i];
         }
-        nextPos.x += xdiff;
-        sf::Vector2f circleCenter;
-        //circleCenter.x = nextPos.x + circleRadius;
-        //circleCenter.y = nextPos.y + circleRadius;
-        shape.setPosition(nextPos);
-        if (collides(&shape, &wall)) {
-            shape.setPosition(curPos);
-            nextPos.x -= xdiff;
-        }
-        else {
-            curPos.x = nextPos.x;
-        }
-        nextPos.y += ydiff;
-        shape.setPosition(nextPos);
-        if (collides(&shape, &wall)) {
-            shape.setPosition(curPos);
-            nextPos.y -= ydiff;
-        }
+        shapeMoveInfo[4] = speed;
+        movesWithCollision(&shape, shapeMoveInfo, &elapsed, &obstacles, &window);
         if (collides(&shape, &wall2))
             wall2.setFillColor(sf::Color::Red);
         else
@@ -160,7 +158,6 @@ int main()
             shape2.setFillColor(sf::Color::Cyan);
         if (collides(&shape, &quitZone))
             window.close();
-        shape.setPosition(nextPos);
         window.draw(quitZone);
         window.draw(shape);
         window.draw(shape2);
