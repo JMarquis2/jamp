@@ -7,6 +7,9 @@
 #include <utility>
 #include <iterator>
 #include "moves.h"
+#include "Entity.h"
+#include "Interactable.h"
+#include "Hitbox.h"
 
 int main()
 {
@@ -29,6 +32,7 @@ int main()
     wall2.setPosition(250, 150);
     wall2.setFillColor(sf::Color::Blue);
     wall.setFillColor(sf::Color::Black);
+
     bool menuOpen = false;
     //can't make this an unordered set yet, but is more efficient. Need a hash function for pair of pointers.
     //std::unordered_set<std::pair<sf::CircleShape*, int*>> independents;

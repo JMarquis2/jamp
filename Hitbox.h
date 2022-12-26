@@ -4,10 +4,10 @@ class Hitbox
 {
 public:
 	~Hitbox();
-	Hitbox(bool circHitbox);
+	Hitbox(float* shapeInfo, int _shapeType);
 	sf::Shape* getHitShape();
 private:
 	sf::Shape* hitShape;
-	bool isCirc;
+	int shapeType;
 };
 
