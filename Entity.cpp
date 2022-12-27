@@ -11,6 +11,10 @@ float Entity::getAngle() {
 float Entity::getSpeed() {
     return speed;
 }
-Entity::Entity(sf::Vector2f _position, sf::Color _color, int hitboxType, float* hitInfo, float _speed, float _directionAngle) :
-    speed(_speed), directionAngle(_directionAngle), Interactable(_position, _color, hitboxType, hitInfo) {
+Entity::Entity(sf::Vector2f _position, float radius, float _speed, float _directionAngle) :
+    speed(_speed), directionAngle(_directionAngle), Interactable(_position, radius) {
 }
+Entity::Entity(sf::Vector2f _position, float width, float height, float _speed, float _directionAngle) :
+    speed(_speed), directionAngle(_directionAngle), Interactable(_position, width, height) {
+}
+

@@ -6,7 +6,9 @@ class Entity : public Interactable
 public:
 	 ~Entity();
 	 Entity();
-	 Entity(sf::Vector2f _position, sf::Color _color, int hitboxType, float* hitInfo, float _speed, float _directionAngle);
+	 Entity(sf::Vector2f _position, float radius, float _speed, float _directionAngle);
+	 Entity(sf::Vector2f _position, float width, float height, float _speed, float _directionAngle);
+
 	 float getSpeed();
 	 float getAngle();
 private:
