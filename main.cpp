@@ -33,8 +33,9 @@ int main()
     wall2.setPosition(250, 150);
     wall2.setFillColor(sf::Color::Blue);
     wall.setFillColor(sf::Color::Black);
-
     Player dude;
+    Player::loadSpriteFromFile("devil.png");
+    Player dude2(sf::Vector2f(500.f, 100.f));
 
     bool menuOpen = false;
     //can't make this an unordered set yet, but is more efficient. Need a hash function for pair of pointers.
@@ -194,6 +195,7 @@ int main()
             window.draw(wall);
             window.draw(wall2);
             window.draw(dude);
+            window.draw(dude2);
             window.setView(view);
             window.display();
         }
@@ -207,6 +209,5 @@ int main()
     delete[] direction;
     delete[] prevDirection;
     delete shape;
-
     return 0;
 }
