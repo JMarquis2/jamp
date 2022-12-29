@@ -35,7 +35,7 @@ int main()
     wall.setFillColor(sf::Color::Black);
     
     sf::Texture* devil = new sf::Texture();
-    devil->loadFromFile("devil.png");
+    devil->loadFromFile("Textures/devil.png");
 
     Player dude(sf::Vector2f(500.f, 100.f));
 
