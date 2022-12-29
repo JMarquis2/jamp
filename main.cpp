@@ -33,10 +33,15 @@ int main()
     wall2.setPosition(250, 150);
     wall2.setFillColor(sf::Color::Blue);
     wall.setFillColor(sf::Color::Black);
-    Player dude;
-    Player::loadSpriteFromFile("devil.png");
-    Player dude2(sf::Vector2f(500.f, 100.f));
+    
+    sf::Texture* devil = new sf::Texture();
+    devil->loadFromFile("devil.png");
 
+    Player dude(sf::Vector2f(500.f, 100.f));
+
+    dude.setTexture(devil, sf::Vector2i(0, 0));
+
+    Player& dudeRef = dude;
     bool menuOpen = false;
     //can't make this an unordered set yet, but is more efficient. Need a hash function for pair of pointers.
     //std::unordered_set<std::pair<sf::CircleShape*, int*>> independents;
@@ -194,8 +199,7 @@ int main()
             window.draw(shape2);
             window.draw(wall);
             window.draw(wall2);
-            window.draw(dude);
-            window.draw(dude2);
+            window.draw(dudeRef);
             window.setView(view);
             window.display();
         }
@@ -209,5 +213,6 @@ int main()
     delete[] direction;
     delete[] prevDirection;
     delete shape;
+    delete devil;
     return 0;
 }

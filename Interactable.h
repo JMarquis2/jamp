@@ -10,6 +10,7 @@ public:
 	Interactable(sf::Vector2f _position, float radius);
 	Interactable(sf::Vector2f _position, float width, float height);
 	Interactable();
+	Hitbox* getHitbox();
 
 
 private:
