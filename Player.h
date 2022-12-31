@@ -5,11 +5,10 @@
 class Player : public Unit
 {
 private:
-	//this texture errors for some reason in initialization
-	//might end up using a resource manager for textures, anyway. So no static texture class member.
+	//need to put textures and drawing into a base class.
 	sf::Texture* playerSheet;
-	sf::CircleShape tmodel;
-	sf::VertexArray vertices;
+	sf::CircleShape defaultModel; //should never actually be called
+	sf::Vertex* model;
 	sf::Color color;
 	float width = 100.f;
 	float height = 100.f;
