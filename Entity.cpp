@@ -17,4 +17,8 @@ Entity::Entity(sf::Vector2f _position, float radius, float _speed, float _direct
 Entity::Entity(sf::Vector2f _position, float width, float height, float _speed, float _directionAngle) :
     speed(_speed), directionAngle(_directionAngle), Interactable(_position, width, height) {
 }
+void Entity::moveToPosition(sf::Vector2f position) {
+    this->setPosition(position);
+    this->getHitbox()->getHitShape()->setPosition(position);
+}
 

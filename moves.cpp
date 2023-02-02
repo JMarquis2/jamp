@@ -2,6 +2,8 @@
 #include "collision.h"
 #include <SFML/Graphics.hpp>
 #include <iterator>
+#include "Entity.h"
+#include <math.h>
 //moveInfo is a 5-length array which contains first the directions being traveled, then the speed.
 bool movesWithCollision(sf::Shape* mover, float* moveInfo, sf::Time* elapsed, std::list<sf::Transformable*>* obstacles, sf::RenderWindow* window){
 	float curX = mover->getPosition().x;
@@ -75,6 +77,40 @@ bool movesWithCollision(sf::Sprite* mover, float* moveInfo, sf::Time* elapsed, s
     for (auto it = obstacles->begin(); it != obstacles->end(); it++) {
         if (collides(mover, *it)) {
             mover->setPosition(curPos);
+            collided = true;
+            nextPos.y -= ydiff;
+            break;
+        }
+    }
+    window->draw(*mover);
+    return collided;
+}
+bool movesWithCollision(Entity* mover, float angle, float dist, sf::Time* elapsed, std::list<Interactable*>* obstacles, sf::RenderWindow* window) {
+    sf::Vector2f curPos = mover->getPosition();
+    sf::Vector2f nextPos = mover->getPosition();
+    bool collided = false;
+
+    float xdiff = cos(angle) * dist * elapsed->asSeconds();
+    float ydiff = sin(angle) * dist * elapsed->asSeconds();
+
+    nextPos.x += xdiff;
+    mover->moveToPosition(nextPos);
+    for (auto it = obstacles->begin(); it != obstacles->end(); it++) {
+        if (collides(mover, *it)) {
+            mover->moveToPosition(curPos);
+            collided = true;
+            nextPos.x -= xdiff;
+            break;
+        }
+        if (std::next(it) == obstacles->end()) {
+            curPos.x = nextPos.x;
+        }
+    }
+    nextPos.y += ydiff;
+    mover->moveToPosition(nextPos);
+    for (auto it = obstacles->begin(); it != obstacles->end(); it++) {
+        if (collides(mover, *it)) {
+            mover->moveToPosition(curPos);
             collided = true;
             nextPos.y -= ydiff;
             break;
