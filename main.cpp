@@ -16,23 +16,37 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(750, 600), "JAMP, Come in!");
     sf::View view = window.getDefaultView();
+    
+    
     sf::Clock clock;
     sf::Time prevTime = clock.getElapsedTime();
     sf::Time currTime;
+
+
     sf::CircleShape* shape = new sf::CircleShape(25.f);
+    shape->setFillColor(sf::Color::Green);
+
+    sf::CircleShape shape2(65.0f);
+    shape2.setPosition(400, 400);
+    shape2.setFillColor(sf::Color::Cyan);
+
+
     sf::RectangleShape wall(sf::Vector2f(100.0f, 20.0f));
+    wall.setPosition(100, 500);
+    wall.setFillColor(sf::Color::Black);
+
+    sf::RectangleShape wall2(sf::Vector2f(100.0f, 20.0f));
+    wall2.setPosition(250, 150);
+    wall2.setFillColor(sf::Color::Blue);
+
+
+   /*quitzone*/ 
     sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
     quitZone.setPosition(700, 550);
     quitZone.setFillColor(sf::Color::Red);
     wall.setPosition(100, 500);
     shape->setFillColor(sf::Color::Green);
-    sf::RectangleShape wall2(sf::Vector2f(100.0f, 20.0f));
-    sf::CircleShape shape2(65.0f);
-    shape2.setPosition(400, 400);
-    shape2.setFillColor(sf::Color::Cyan);
-    wall2.setPosition(250, 150);
-    wall2.setFillColor(sf::Color::Blue);
-    wall.setFillColor(sf::Color::Black);
+
 
     Player dude;
 
