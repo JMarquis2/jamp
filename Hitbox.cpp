@@ -20,3 +20,6 @@ Hitbox::Hitbox(float* shapeInfo, int _shapeType) {
 sf::Shape* Hitbox::getHitShape() {
 	return hitShape;
 }
+int Hitbox::getShapeType() {
+	return shapeType;
+}

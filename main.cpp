@@ -21,6 +21,7 @@ int main()
     sf::Clock clock;
     sf::Time prevTime = clock.getElapsedTime();
     sf::Time currTime;
+<<<<<<< HEAD
 
 
     sf::CircleShape* shape = new sf::CircleShape(25.f);
@@ -31,6 +32,9 @@ int main()
     shape2.setFillColor(sf::Color::Cyan);
 
 
+=======
+    sf::CircleShape* shape = new sf::CircleShape(50.f);
+>>>>>>> fbd07d73d6b42fffff8cd15c06ef6887f5985930
     sf::RectangleShape wall(sf::Vector2f(100.0f, 20.0f));
     wall.setPosition(100, 500);
     wall.setFillColor(sf::Color::Black);
@@ -46,9 +50,23 @@ int main()
     quitZone.setFillColor(sf::Color::Red);
     wall.setPosition(100, 500);
     shape->setFillColor(sf::Color::Green);
+<<<<<<< HEAD
 
+=======
+    sf::RectangleShape wall2(sf::Vector2f(100.0f, 20.0f));
+    sf::CircleShape shape2(65.0f);
+    shape2.setPosition(400, 400);
+    shape2.setFillColor(sf::Color::Cyan);
+    wall2.setPosition(250, 150);
+    wall2.setFillColor(sf::Color::Blue);
+    wall.setFillColor(sf::Color::Black);
+    
+    sf::Texture* devil = new sf::Texture();
+    devil->loadFromFile("Textures/devil.png");
+    Player dude(sf::Vector2f(0.f, 0.f));
+>>>>>>> fbd07d73d6b42fffff8cd15c06ef6887f5985930
 
-    Player dude;
+    dude.setTexture(devil, sf::Vector2i(0, 0));
 
     bool menuOpen = false;
     //can't make this an unordered set yet, but is more efficient. Need a hash function for pair of pointers.
@@ -112,9 +130,9 @@ int main()
                     }
                     if (!menuOpen) {
                         if (event.key.code == sf::Keyboard::Q)
-                            speed *= 1.2f;
+                            speed *= 1.5f;
                         if (event.key.code == sf::Keyboard::W)
-                            speed /= 1.2f;
+                            speed /= 1.5f;
                         if (event.key.code == sf::Keyboard::Space) {
                             float* ballisticInfo = new float[5];
                             if (direction[0] + direction[1] + direction[2] + direction[3] <= 0.0001f) {
@@ -207,7 +225,9 @@ int main()
             window.draw(shape2);
             window.draw(wall);
             window.draw(wall2);
-            window.draw(dude);
+            //this isnt working for some reason?? nevermind im dumb
+            window.draw(*dude);
+            window.draw(dudeSprite);
             window.setView(view);
             window.display();
         }
@@ -221,6 +241,6 @@ int main()
     delete[] direction;
     delete[] prevDirection;
     delete shape;
-
+    delete devil;
     return 0;
 }
