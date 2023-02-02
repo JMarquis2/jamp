@@ -16,43 +16,16 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(750, 600), "JAMP, Come in!");
     sf::View view = window.getDefaultView();
-    
-    
     sf::Clock clock;
     sf::Time prevTime = clock.getElapsedTime();
     sf::Time currTime;
-<<<<<<< HEAD
-
-
-    sf::CircleShape* shape = new sf::CircleShape(25.f);
-    shape->setFillColor(sf::Color::Green);
-
-    sf::CircleShape shape2(65.0f);
-    shape2.setPosition(400, 400);
-    shape2.setFillColor(sf::Color::Cyan);
-
-
-=======
     sf::CircleShape* shape = new sf::CircleShape(50.f);
->>>>>>> fbd07d73d6b42fffff8cd15c06ef6887f5985930
     sf::RectangleShape wall(sf::Vector2f(100.0f, 20.0f));
-    wall.setPosition(100, 500);
-    wall.setFillColor(sf::Color::Black);
-
-    sf::RectangleShape wall2(sf::Vector2f(100.0f, 20.0f));
-    wall2.setPosition(250, 150);
-    wall2.setFillColor(sf::Color::Blue);
-
-
-   /*quitzone*/ 
     sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
     quitZone.setPosition(700, 550);
     quitZone.setFillColor(sf::Color::Red);
     wall.setPosition(100, 500);
     shape->setFillColor(sf::Color::Green);
-<<<<<<< HEAD
-
-=======
     sf::RectangleShape wall2(sf::Vector2f(100.0f, 20.0f));
     sf::CircleShape shape2(65.0f);
     shape2.setPosition(400, 400);
@@ -60,11 +33,10 @@ int main()
     wall2.setPosition(250, 150);
     wall2.setFillColor(sf::Color::Blue);
     wall.setFillColor(sf::Color::Black);
-    
+
     sf::Texture* devil = new sf::Texture();
     devil->loadFromFile("Textures/devil.png");
     Player dude(sf::Vector2f(0.f, 0.f));
->>>>>>> fbd07d73d6b42fffff8cd15c06ef6887f5985930
 
     dude.setTexture(devil, sf::Vector2i(0, 0));
 
@@ -236,7 +208,7 @@ int main()
     //heap cleanup
     for (auto it = independents.begin(); it != independents.end(); it++) {
         delete it->first;
-        delete [] it->second;
+        delete[] it->second;
     }
     delete[] direction;
     delete[] prevDirection;
