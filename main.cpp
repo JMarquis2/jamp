@@ -35,7 +35,7 @@ int main()
     wall.setFillColor(sf::Color::Black);
 
     sf::Texture* devil = new sf::Texture();
-    devil->loadFromFile("Textures/devil.png");
+    devil->loadFromFile("Textures/knight default-right.png");
     Player dude(sf::Vector2f(0.f, 0.f));
 
     dude.setTexture(devil, sf::Vector2i(0, 0));
@@ -198,8 +198,8 @@ int main()
             window.draw(wall);
             window.draw(wall2);
             //this isnt working for some reason?? nevermind im dumb
-            window.draw(*dude);
-            window.draw(dudeSprite);
+            window.draw(dude);
+            
             window.setView(view);
             window.display();
         }
