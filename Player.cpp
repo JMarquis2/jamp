@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <cmath>
 //this guy right here
 Player::~Player() {
 	delete[] model;
@@ -42,4 +43,13 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	else {
 		target.draw(defaultModel, states);
 	}
+}
+void Player::updateTexture() {
+	int directionIndex = 0;
+	if (this->getSpeed() > 0.0001) {
+		directionIndex = ((int) round(this->getAngle() / 90)) % 4;
+	}
+	texturePosition.y = directionIndex * height;
+	texturePosition.x = (texturePosition.x + 100) % 300;
+	this->setTexture(playerSheet, texturePosition);
 }
