@@ -11,34 +11,50 @@
 #include "Interactable.h"
 #include "Hitbox.h"
 #include "Player.h"
+#include <iostream>
 
 int main()
 {
+    // sets up windows
     sf::RenderWindow window(sf::VideoMode(750, 600), "JAMP, Come in!");
     sf::View view = window.getDefaultView();
+    
+    // sets up clock 
     sf::Clock clock;
     sf::Time prevTime = clock.getElapsedTime();
     sf::Time currTime;
+    
+    // shapes to test with 
     sf::CircleShape* shape = new sf::CircleShape(50.f);
-    sf::RectangleShape wall(sf::Vector2f(100.0f, 20.0f));
-    sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
-    quitZone.setPosition(700, 550);
-    quitZone.setFillColor(sf::Color::Red);
-    wall.setPosition(100, 500);
     shape->setFillColor(sf::Color::Green);
-    sf::RectangleShape wall2(sf::Vector2f(100.0f, 20.0f));
+    
     sf::CircleShape shape2(65.0f);
     shape2.setPosition(400, 400);
     shape2.setFillColor(sf::Color::Cyan);
-    wall2.setPosition(250, 150);
-    wall2.setFillColor(sf::Color::Blue);
+   
+    
+    sf::RectangleShape wall(sf::Vector2f(100.0f, 20.0f));
+    wall.setPosition(100, 500);
     wall.setFillColor(sf::Color::Black);
 
-    sf::Texture* devil = new sf::Texture();
-    devil->loadFromFile("Textures/knight default-right.png");
-    Player dude(sf::Vector2f(0.f, 0.f));
+    sf::RectangleShape wall2(sf::Vector2f(100.0f, 20.0f));
+    wall2.setPosition(250, 150);
+    wall2.setFillColor(sf::Color::Blue);
 
-    dude.setTexture(devil, sf::Vector2i(0, 0));
+
+    sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
+    quitZone.setPosition(700, 550);
+    quitZone.setFillColor(sf::Color::Red);
+    
+
+    // create texutres for dude player.
+    sf::Texture* knight = new sf::Texture();
+    knight->loadFromFile("Textures/player_knight.png");
+    Player dude(sf::Vector2f(0.f, 0.f));
+    dude.setTexture(knight, sf::Vector2i(0, 0));
+    
+    int x_pos = 0;
+    int y_pos = 0;
 
     bool menuOpen = false;
     //can't make this an unordered set yet, but is more efficient. Need a hash function for pair of pointers.
@@ -90,15 +106,33 @@ int main()
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         direction[1] = 1;
+                        y_pos = 200;
+                        x_pos = (x_pos + 100) % 300;
+                        std::cout << x_pos << std::endl;
+                        dude.setTexture(knight, sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         direction[0] = 1;
+                        y_pos = 300;
+                        x_pos = (x_pos + 100) % 300;
+                        std::cout << x_pos << std::endl;
+                        dude.setTexture(knight, sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         direction[2] = 1;
+                        y_pos = 100;
+                        x_pos = (x_pos + 100) % 300;
+                        std::cout << x_pos << std::endl;
+                        dude.setTexture(knight, sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Right) {
                         direction[3] = 1;
+                        y_pos = 0;
+                        x_pos = (x_pos + 100) % 300;
+                        std::cout << x_pos << std::endl;
+                        dude.setTexture(knight, sf::Vector2i(x_pos, y_pos));
+                      
+
                     }
                     if (!menuOpen) {
                         if (event.key.code == sf::Keyboard::Q)
@@ -183,7 +217,7 @@ int main()
             shapeMoveInfo[4] = speed;
             movesWithCollision(shape, shapeMoveInfo, &elapsed, &obstacles, &window);
             if (collides(shape, &wall2))
-                wall2.setFillColor(sf::Color::Red);
+                wall2.setFillColor(sf::Color::Red);      
             else
                 wall2.setFillColor(sf::Color::Blue);
             if (collides(shape, &shape2))
@@ -200,7 +234,7 @@ int main()
             //this isnt working for some reason?? nevermind im dumb
             window.draw(dude);
             
-            window.setView(view);
+           // window.setView(view);
             window.display();
         }
     }
@@ -213,6 +247,6 @@ int main()
     delete[] direction;
     delete[] prevDirection;
     delete shape;
-    delete devil;
+    delete knight;
     return 0;
 }

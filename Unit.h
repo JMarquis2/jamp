@@ -5,7 +5,7 @@ class Unit : public Entity
 {
 public:
 	Unit();
-	Unit(float _maxHP, float _maxMana, float _hpRegen, float _manaRegen,sf::Vector2f _position, 
+	Unit(float _maxHP, float _maxMana, float _hpRegen, float _manaRegen, sf::Vector2f _position,
 		float radius, float _speed, float _directionAngle);
 	Unit(float _maxHP, float _maxMana, float _hpRegen, float _manaRegen, sf::Vector2f _position,
 		float width, float height, float _speed, float _directionAngle);
@@ -28,4 +28,3 @@ private:
 	//std::list<Buff> buffs;
 	//std::list<Debuff> debuffs;
 };
-
