@@ -1,5 +1,4 @@
 #pragma once
-#include "Unit.h"
 #include "Entity.h"
 #include <list>
 class Unit : public Entity
