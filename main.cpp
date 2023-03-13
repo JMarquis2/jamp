@@ -261,6 +261,5 @@ int main()
     delete[] direction;
     delete[] prevDirection;
     delete shape;
-    delete knight;
     return 0;
 }
