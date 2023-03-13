@@ -5,6 +5,23 @@
 #include "Entity.h"
 #include <math.h>
 //moveInfo is a 5-length array which contains first the directions being traveled, then the speed.
+/*
+int* angleToNearestCardinals(float angle) {
+    int directionArray[] = { 0, 0, 0, 0 };
+    directionArray[((int)round(angle) / 90) % 4] = 1;
+}
+float cardinalsToAngle(int* cardinals) {
+    if (cardinals[0] == 1)
+        return 0.f;
+    if (cardinals[1] == 1)
+        return 90.f;
+    if (cardinals[2] == 1)
+        return 180.f;
+    else
+        return 270.f;
+}
+*/
+
 bool movesWithCollision(sf::Shape* mover, float* moveInfo, sf::Time* elapsed, std::list<sf::Transformable*>* obstacles, sf::RenderWindow* window){
 	float curX = mover->getPosition().x;
 	float curY = mover->getPosition().y;

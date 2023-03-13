@@ -12,6 +12,9 @@ public:
 
 	 float getSpeed();
 	 float getAngle();
+
+	 void setSpeed(float _speed);
+	 void setAngle(float _angle);
 private:
 	float speed;
 	float directionAngle;

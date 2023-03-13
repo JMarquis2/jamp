@@ -23,13 +23,7 @@ Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 5
 }
 void Player::setTexture(sf::Texture* tex, sf::Vector2i texPos) {
 	playerSheet = tex;
-	texturePosition.x = texPos.x;
-	texturePosition.y = texPos.y;
-	model[0].texCoords = sf::Vector2f(texturePosition.x, texturePosition.y);
-	model[1].texCoords = sf::Vector2f(texturePosition.x + width, texturePosition.y);
-	model[2].texCoords = sf::Vector2f(texturePosition.x + width, texturePosition.y + height);
-	model[3].texCoords = sf::Vector2f(texturePosition.x, texturePosition.y + height);
-
+	updateTexture(texPos);
 }
 //for some reason, when this is called, the player object doesnt have its correct member values. I suspect its a problem with a copy constructor
 //or assignment operator or something.
@@ -44,12 +38,11 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		target.draw(defaultModel, states);
 	}
 }
-void Player::updateTexture() {
-	int directionIndex = 0;
-	if (this->getSpeed() > 0.0001) {
-		directionIndex = ((int) round(this->getAngle() / 90)) % 4;
-	}
-	texturePosition.y = directionIndex * height;
-	texturePosition.x = (texturePosition.x + 100) % 300;
-	this->setTexture(playerSheet, texturePosition);
+void Player::updateTexture(sf::Vector2i texPos) {
+	texturePosition.x = texPos.x;
+	texturePosition.y = texPos.y;
+	model[0].texCoords = sf::Vector2f(texturePosition.x, texturePosition.y);
+	model[1].texCoords = sf::Vector2f(texturePosition.x + width, texturePosition.y);
+	model[2].texCoords = sf::Vector2f(texturePosition.x + width, texturePosition.y + height);
+	model[3].texCoords = sf::Vector2f(texturePosition.x, texturePosition.y + height);
 }
