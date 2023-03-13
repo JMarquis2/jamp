@@ -11,6 +11,12 @@ float Entity::getAngle() {
 float Entity::getSpeed() {
     return speed;
 }
+void Entity::setSpeed(float _speed) {
+    speed = _speed;
+}
+void Entity::setAngle(float _angle) {
+    directionAngle = _angle;
+}
 Entity::Entity(sf::Vector2f _position, float radius, float _speed, float _directionAngle) :
     speed(_speed), directionAngle(_directionAngle), Interactable(_position, radius) {
 }

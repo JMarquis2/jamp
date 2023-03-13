@@ -216,6 +216,11 @@ int main()
             }
             shapeMoveInfo[4] = speed;
             movesWithCollision(shape, shapeMoveInfo, &elapsed, &obstacles, &window);
+
+            //try to make Player dude move
+            dude.setSpeed(50);
+            
+
             if (collides(shape, &wall2))
                 wall2.setFillColor(sf::Color::Red);      
             else
