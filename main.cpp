@@ -11,6 +11,7 @@
 #include "Interactable.h"
 #include "Hitbox.h"
 #include "Player.h"
+#include "TextureManager.h"
 #include <iostream>
 
 int main()
@@ -47,11 +48,19 @@ int main()
     quitZone.setFillColor(sf::Color::Red);
     
 
-    // create texutres for dude player.
-    sf::Texture* knight = new sf::Texture();
-    knight->loadFromFile("Textures/player_knight.png");
+    //example:use texturemanager
+
+    //first, add all texture names to vector.
+    std::vector<std::string> textureNames;
+    textureNames.push_back("player_knight");
+
+    //then, construct texturemanager using vector.
+    TextureManager texmachine(textureNames);
+
+    //if you want to add another texture, you could also call importTexture(name);
+
     Player dude(sf::Vector2f(0.f, 0.f));
-    dude.setTexture(knight, sf::Vector2i(0, 0));
+    dude.setTexture(texmachine.getTextureInfo("player_knight").second, sf::Vector2i(0, 0));
     
     int x_pos = 0;
     int y_pos = 0;
@@ -109,28 +118,28 @@ int main()
                         y_pos = 200;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.setTexture(knight, sf::Vector2i(x_pos, y_pos));
+                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         direction[0] = 1;
                         y_pos = 300;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.setTexture(knight, sf::Vector2i(x_pos, y_pos));
+                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         direction[2] = 1;
                         y_pos = 100;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.setTexture(knight, sf::Vector2i(x_pos, y_pos));
+                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Right) {
                         direction[3] = 1;
                         y_pos = 0;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.setTexture(knight, sf::Vector2i(x_pos, y_pos));
+                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
                       
 
                     }
