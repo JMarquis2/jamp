@@ -12,11 +12,15 @@ public:
 
 	 float getSpeed();
 	 float getAngle();
+	 bool getIdle();
 
 	 void setSpeed(float _speed);
 	 void setAngle(float _angle);
+	 void setAngle(int* directions);
+	 void setIdle(bool _isIdle);
 private:
 	float speed;
 	float directionAngle;
+	bool isIdle;
 };
 

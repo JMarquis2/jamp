@@ -83,6 +83,7 @@ int main()
     int* prevDirection{ new int[4]{0, 0, 0, 0} };
     //up, down, left, right
     float speed = 500.f;
+    testDude.setSpeed(speed);
     while (window.isOpen())
     {
         sf::Event event;
@@ -105,13 +106,18 @@ int main()
         }
         //the game is playing
         else {
-            //set previous directions to last looped directions
+            //set previous directions to last looped directions if new inputs
             if (direction[0] + direction[1] + direction[2] + direction[3] >= 0.0001f) {
                 for (int i = 0; i < 4; i++)
                     prevDirection[i] = direction[i];
+                testDude.setIdle(false);
             }
+            else {
+                testDude.setIdle(true);
+            }
+            testDude.setAngle(cardinalsToAngle(prevDirection));
             //update view
-            view.setCenter(shape->getPosition());
+            view.setCenter(testDude.getPosition());
 
             //update time
             currTime = clock.getElapsedTime();
@@ -206,6 +212,7 @@ int main()
             //clear the window, prepare to draw sprites
             window.clear(sf::Color::White);
 
+
             //temporary iteration through "bullets" shot with space bar
             for (auto it = independents.begin(); it != independents.end(); it++) {
                 bool collided = movesWithCollision(it->first, it->second, &elapsed, &obstacles, &window);
@@ -239,6 +246,12 @@ int main()
                 curDelete++;
             }
             deleteReady.clear();
+
+            //loop through physics stuff...
+            movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
+            std::cout << testDude.getPosition().x;
+            std::cout << " " << testDude.getPosition().y << std::endl;
+            //std::cout << cardinalsToAngle(direction) << std::endl;
 
             //shape moves
             float* shapeMoveInfo = new float[5];

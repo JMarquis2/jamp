@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <cmath>
+#include "moves.h"
 //this guy right here
 Player::~Player() {
 	delete[] model;
@@ -52,6 +53,19 @@ void Player::setTexturePosition(sf::Vector2i texPos) {
 	model[3].texCoords = sf::Vector2f(texturePosition.x, texturePosition.y + height);
 }
 void Player::updateTexture() {
+	int* facing = angleToCardinals(this->getAngle());
+	if (facing[2] == 1) {
+		texturePosition.y = texHeight * 1;
+	}
+	else if (facing[3] == 1) {
+		texturePosition.y = 0;
+	}
+	else if (facing[0] == 1) {
+		texturePosition.y = texHeight * 3;
+	}
+	else{
+		texturePosition.y = texHeight * 2;
+	}
 	texturePosition.x = (texturePosition.x + texWidth) % frameNumbers[texturePosition.y / texHeight] * texWidth;
 	setTexturePosition(texturePosition);
 }
