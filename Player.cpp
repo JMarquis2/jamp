@@ -66,6 +66,6 @@ void Player::updateTexture() {
 	else{
 		texturePosition.y = texHeight * 2;
 	}
-	texturePosition.x = (texturePosition.x + texWidth) % frameNumbers[texturePosition.y / texHeight] * texWidth;
+	texturePosition.x = (texturePosition.x + texWidth) % (frameNumbers[texturePosition.y / texHeight] * texWidth);
 	setTexturePosition(texturePosition);
 }
