@@ -87,6 +87,7 @@ int main()
     while (window.isOpen())
     {
         sf::Event event;
+        //game is paused
         if (menuOpen) {
             for (int i = 0; i < 4; i++)
                 direction[i] = 0;
@@ -103,15 +104,23 @@ int main()
             }
             window.display();
         }
+        //the game is playing
         else {
+            //set previous directions to last looped directions
             if (direction[0] + direction[1] + direction[2] + direction[3] >= 0.0001f) {
                 for (int i = 0; i < 4; i++)
                     prevDirection[i] = direction[i];
             }
+            //update view
             view.setCenter(shape->getPosition());
+
+            //update time
             currTime = clock.getElapsedTime();
             elapsed = currTime - prevTime;
             prevTime = currTime;
+            spriteUpdateElapsed += elapsed;
+
+            //check for button presses
             while (window.pollEvent(event))
             {
                 if (event.type == sf::Event::Closed)
@@ -194,7 +203,11 @@ int main()
             }
             if (speed < 0)
                 speed = 0;
+
+            //clear the window, prepare to draw sprites
             window.clear(sf::Color::White);
+
+            //temporary iteration through "bullets" shot with space bar
             for (auto it = independents.begin(); it != independents.end(); it++) {
                 bool collided = movesWithCollision(it->first, it->second, &elapsed, &obstacles, &window);
                 if (collided) {
@@ -217,6 +230,8 @@ int main()
                 window.draw(*(it->first));
                 */
             }
+
+            //temporary iteration to delete "bullets" that collided with walls
             auto curDelete = deleteReady.begin();
             for (int i = 0; i < deleteReady.size(); i++) {
                 delete (*curDelete)->first;
@@ -225,6 +240,7 @@ int main()
                 curDelete++;
             }
             deleteReady.clear();
+
             //shape moves
             float* shapeMoveInfo = new float[5];
             for (int i = 0; i < 4; i++) {
@@ -232,8 +248,8 @@ int main()
             }
             shapeMoveInfo[4] = speed;
             movesWithCollision(shape, shapeMoveInfo, &elapsed, &obstacles, &window);
-             
-            spriteUpdateElapsed += elapsed;
+            
+            //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
                 spriteUpdateElapsed -= spriteUpdateTimer;
                 /*
@@ -241,10 +257,8 @@ int main()
                 */
                 testDude.updateTexture();
             }
-            //try to make Player dude move
-            dude.setSpeed(50);
-            
 
+            //temporary collision checks
             if (collides(shape, &wall2))
                 wall2.setFillColor(sf::Color::Red);      
             else
@@ -255,6 +269,8 @@ int main()
                 shape2.setFillColor(sf::Color::Cyan);
             if (collides(shape, &quitZone))
                 window.close();
+
+            //draw our drawable objects
             window.draw(quitZone);
             window.draw(*shape);
             window.draw(shape2);
