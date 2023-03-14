@@ -52,6 +52,6 @@ void Player::setTexturePosition(sf::Vector2i texPos) {
 	model[3].texCoords = sf::Vector2f(texturePosition.x, texturePosition.y + height);
 }
 void Player::updateTexture() {
-	texturePosition.x = (texturePosition.x + texWidth) % frameNumbers[texturePosition.y / texHeight] * texWidth;
+	texturePosition.x = (texturePosition.x + texWidth) % (frameNumbers[texturePosition.y / texHeight] * texWidth);
 	setTexturePosition(texturePosition);
 }
