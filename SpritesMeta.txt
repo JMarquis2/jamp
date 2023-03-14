@@ -1,4 +1,9 @@
 [framewidth]        ex: original knight is 100
 [frameheight]       ex: original knight is 100
-[maxwidth]          ex: original knight is 300
-[maxheight]         ex: original knight is 400
+[#ofrows]
+[# of frames in 1st row]
+[# of frames in 2nd row]
+.
+.
+.
+[# of frames in nth row]

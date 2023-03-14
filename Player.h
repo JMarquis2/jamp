@@ -19,6 +19,6 @@ public:
 	Player();
 	Player(sf::Vector2f position);
 	void setTexture(sf::Texture* tex, sf::Vector2i texPos);
-	
+	void updateTexture(sf::Vector2i texPos);
 };
 
