@@ -24,6 +24,10 @@ int main()
     sf::Clock clock;
     sf::Time prevTime = clock.getElapsedTime();
     sf::Time currTime;
+    sf::Time elapsed;
+
+    sf::Time spriteUpdateTimer = sf::seconds(0.0833333f);
+    sf::Time spriteUpdateElapsed;
     
     // shapes to test with 
     sf::CircleShape* shape = new sf::CircleShape(50.f);
@@ -46,7 +50,6 @@ int main()
     sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
     quitZone.setPosition(700, 550);
     quitZone.setFillColor(sf::Color::Red);
-    
 
     //example:use texturemanager
 
@@ -59,8 +62,11 @@ int main()
 
     //if you want to add another texture, you could also call importTexture(name);
 
+    Player testDude(sf::Vector2f(100.f, 100.f));
+    testDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
+
     Player dude(sf::Vector2f(0.f, 0.f));
-    dude.setTexture(texmachine.getTextureInfo("player_knight").second, sf::Vector2i(0, 0));
+    dude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
     
     int x_pos = 0;
     int y_pos = 0;
@@ -80,6 +86,7 @@ int main()
     while (window.isOpen())
     {
         sf::Event event;
+        //game is paused
         if (menuOpen) {
             for (int i = 0; i < 4; i++)
                 direction[i] = 0;
@@ -96,15 +103,23 @@ int main()
             }
             window.display();
         }
+        //the game is playing
         else {
+            //set previous directions to last looped directions
             if (direction[0] + direction[1] + direction[2] + direction[3] >= 0.0001f) {
                 for (int i = 0; i < 4; i++)
                     prevDirection[i] = direction[i];
             }
+            //update view
             view.setCenter(shape->getPosition());
+
+            //update time
             currTime = clock.getElapsedTime();
-            sf::Time elapsed = currTime - prevTime;
+            elapsed = currTime - prevTime;
             prevTime = currTime;
+            spriteUpdateElapsed += elapsed;
+
+            //check for button presses
             while (window.pollEvent(event))
             {
                 if (event.type == sf::Event::Closed)
@@ -118,28 +133,28 @@ int main()
                         y_pos = 200;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
+                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         direction[0] = 1;
                         y_pos = 300;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
+                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         direction[2] = 1;
                         y_pos = 100;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
+                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Right) {
                         direction[3] = 1;
                         y_pos = 0;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
+                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                       
 
                     }
@@ -187,7 +202,11 @@ int main()
             }
             if (speed < 0)
                 speed = 0;
+
+            //clear the window, prepare to draw sprites
             window.clear(sf::Color::White);
+
+            //temporary iteration through "bullets" shot with space bar
             for (auto it = independents.begin(); it != independents.end(); it++) {
                 bool collided = movesWithCollision(it->first, it->second, &elapsed, &obstacles, &window);
                 if (collided) {
@@ -210,6 +229,8 @@ int main()
                 window.draw(*(it->first));
                 */
             }
+
+            //temporary iteration to delete "bullets" that collided with walls
             auto curDelete = deleteReady.begin();
             for (int i = 0; i < deleteReady.size(); i++) {
                 delete (*curDelete)->first;
@@ -218,6 +239,7 @@ int main()
                 curDelete++;
             }
             deleteReady.clear();
+
             //shape moves
             float* shapeMoveInfo = new float[5];
             for (int i = 0; i < 4; i++) {
@@ -225,11 +247,17 @@ int main()
             }
             shapeMoveInfo[4] = speed;
             movesWithCollision(shape, shapeMoveInfo, &elapsed, &obstacles, &window);
-
-            //try to make Player dude move
-            dude.setSpeed(50);
             
+            //loop to update sprite animations -- runs 12 times per second
+            if (spriteUpdateElapsed >= spriteUpdateTimer) {
+                spriteUpdateElapsed -= spriteUpdateTimer;
+                /*
+                loop through every animated object, run "update sprite" function
+                */
+                testDude.updateTexture();
+            }
 
+            //temporary collision checks
             if (collides(shape, &wall2))
                 wall2.setFillColor(sf::Color::Red);      
             else
@@ -240,6 +268,8 @@ int main()
                 shape2.setFillColor(sf::Color::Cyan);
             if (collides(shape, &quitZone))
                 window.close();
+
+            //draw our drawable objects
             window.draw(quitZone);
             window.draw(*shape);
             window.draw(shape2);
@@ -247,8 +277,9 @@ int main()
             window.draw(wall2);
             //this isnt working for some reason?? nevermind im dumb
             window.draw(dude);
-            
-           // window.setView(view);
+            window.draw(testDude);
+
+            window.setView(view);
             window.display();
         }
     }
