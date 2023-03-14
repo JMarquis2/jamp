@@ -5,22 +5,34 @@
 #include "Entity.h"
 #include <math.h>
 //moveInfo is a 5-length array which contains first the directions being traveled, then the speed.
-/*
-int* angleToNearestCardinals(float angle) {
-    int directionArray[] = { 0, 0, 0, 0 };
-    directionArray[((int)round(angle) / 90) % 4] = 1;
+#define PI 3.14159265
+
+int* angleToCardinals(float angle) {
+    int* directionArray = new int[4]{ 0, 0, 0, 0 };
+    float x = round(cos(angle * PI / 180.0f));
+    float y = round(sin(angle * PI / 180.0f));
+    if (abs(x - 1.f) < 0.0001)
+        directionArray[3] = 1;
+    if (abs(x + 1.f) < 0.0001)
+        directionArray[2] = 1;
+    if (abs(y - 1.f) < 0.0001)
+        directionArray[0] = 1;
+    if (abs(y + 1.f) < 0.0001)
+        directionArray[1] = 1;
+    return directionArray;
 }
 float cardinalsToAngle(int* cardinals) {
-    if (cardinals[0] == 1)
-        return 0.f;
-    if (cardinals[1] == 1)
-        return 90.f;
-    if (cardinals[2] == 1)
-        return 180.f;
+    int xdiff = cardinals[3] - cardinals[2];
+    int ydiff = cardinals[0] - cardinals[1];
+    float angle = 0.f;
+
+    if (ydiff >= 0) {
+        angle = atan2((float)ydiff, (float)xdiff);
+    }
     else
-        return 270.f;
+        angle = 2 * PI - (-1 * atan2((float)ydiff, (float)xdiff));
+    return (angle * 180.f / PI);
 }
-*/
 
 bool movesWithCollision(sf::Shape* mover, float* moveInfo, sf::Time* elapsed, std::list<sf::Transformable*>* obstacles, sf::RenderWindow* window){
 	float curX = mover->getPosition().x;
@@ -102,6 +114,7 @@ bool movesWithCollision(sf::Sprite* mover, float* moveInfo, sf::Time* elapsed, s
     window->draw(*mover);
     return collided;
 }
+
 bool movesWithCollision(Entity* mover, float angle, float dist, sf::Time* elapsed, std::list<Interactable*>* obstacles, sf::RenderWindow* window) {
     sf::Vector2f curPos = mover->getPosition();
     sf::Vector2f nextPos = mover->getPosition();

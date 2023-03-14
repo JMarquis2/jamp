@@ -50,7 +50,6 @@ int main()
     sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
     quitZone.setPosition(700, 550);
     quitZone.setFillColor(sf::Color::Red);
-    
 
     //example:use texturemanager
 
