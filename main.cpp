@@ -24,6 +24,10 @@ int main()
     sf::Clock clock;
     sf::Time prevTime = clock.getElapsedTime();
     sf::Time currTime;
+    sf::Time elapsed;
+
+    sf::Time spriteUpdateTimer = sf::seconds(0.0833333f);
+    sf::Time spriteUpdateElapsed;
     
     // shapes to test with 
     sf::CircleShape* shape = new sf::CircleShape(50.f);
@@ -59,8 +63,11 @@ int main()
 
     //if you want to add another texture, you could also call importTexture(name);
 
+    Player testDude(sf::Vector2f(100.f, 100.f));
+    testDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
+
     Player dude(sf::Vector2f(0.f, 0.f));
-    dude.setTexture(texmachine.getTextureInfo("player_knight").second, sf::Vector2i(0, 0));
+    dude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
     
     int x_pos = 0;
     int y_pos = 0;
@@ -103,7 +110,7 @@ int main()
             }
             view.setCenter(shape->getPosition());
             currTime = clock.getElapsedTime();
-            sf::Time elapsed = currTime - prevTime;
+            elapsed = currTime - prevTime;
             prevTime = currTime;
             while (window.pollEvent(event))
             {
@@ -118,28 +125,28 @@ int main()
                         y_pos = 200;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
+                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         direction[0] = 1;
                         y_pos = 300;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
+                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         direction[2] = 1;
                         y_pos = 100;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
+                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Right) {
                         direction[3] = 1;
                         y_pos = 0;
                         x_pos = (x_pos + 100) % 300;
                         std::cout << x_pos << std::endl;
-                        dude.updateTexture(sf::Vector2i(x_pos, y_pos));
+                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                       
 
                     }
@@ -225,7 +232,15 @@ int main()
             }
             shapeMoveInfo[4] = speed;
             movesWithCollision(shape, shapeMoveInfo, &elapsed, &obstacles, &window);
-
+             
+            spriteUpdateElapsed += elapsed;
+            if (spriteUpdateElapsed >= spriteUpdateTimer) {
+                spriteUpdateElapsed -= spriteUpdateTimer;
+                /*
+                loop through every animated object, run "update sprite" function
+                */
+                testDude.updateTexture();
+            }
             //try to make Player dude move
             dude.setSpeed(50);
             
@@ -247,8 +262,9 @@ int main()
             window.draw(wall2);
             //this isnt working for some reason?? nevermind im dumb
             window.draw(dude);
-            
-           // window.setView(view);
+            window.draw(testDude);
+
+            window.setView(view);
             window.display();
         }
     }
