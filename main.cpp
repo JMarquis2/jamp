@@ -36,7 +36,6 @@ int main()
     sf::CircleShape shape2(65.0f);
     shape2.setPosition(400, 400);
     shape2.setFillColor(sf::Color::Cyan);
-   
     
     sf::RectangleShape wall(sf::Vector2f(100.0f, 20.0f));
     wall.setPosition(100, 500);
@@ -50,6 +49,7 @@ int main()
     sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
     quitZone.setPosition(700, 550);
     quitZone.setFillColor(sf::Color::Red);
+ 
 
     //example:use texturemanager
 
@@ -249,10 +249,9 @@ int main()
 
             //loop through physics stuff...
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
-            std::cout << testDude.getPosition().x;
-            std::cout << " " << testDude.getPosition().y << std::endl;
+            //std::cout << testDude.getPosition().x;
+            //std::cout << " " << testDude.getPosition().y << std::endl;
             //std::cout << cardinalsToAngle(direction) << std::endl;
-
             //shape moves
             float* shapeMoveInfo = new float[5];
             for (int i = 0; i < 4; i++) {

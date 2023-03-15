@@ -124,8 +124,8 @@ bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list
     bool collided = false;
     float dist = elapsed->asSeconds() * mover->getSpeed();
 
-    float xdiff = cos(angle) * dist;
-    float ydiff = sin(angle) * dist;
+    float xdiff = cos(angle * PI / 180.f) * dist;
+    float ydiff = -1 * sin(angle * PI / 180.f) * dist;
 
     nextPos.x += xdiff;
     mover->moveToPosition(nextPos);
