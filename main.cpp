@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "TextureManager.h"
 #include <iostream>
+#include "Wall.h"
 
 int main()
 {
@@ -54,6 +55,7 @@ int main()
     //first, add all texture names to vector.
     std::vector<std::string> textureNames;
     textureNames.push_back("player_knight");
+    textureNames.push_back("Hedge");
 
     //then, construct texturemanager using vector.
     TextureManager texmachine(textureNames);
@@ -65,6 +67,9 @@ int main()
 
     Player dude(sf::Vector2f(0.f, 0.f));
     dude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
+
+    Wall hedge(sf::Vector2f(500.f, 500.f), 150, 50);
+    hedge.setTexture(texmachine.getTextureInfo("Hedge"), sf::Vector2i(0, 0));
     
     int x_pos = 0;
     int y_pos = 0;
@@ -74,8 +79,8 @@ int main()
     //std::unordered_set<std::pair<sf::CircleShape*, int*>> independents;
     std::list<std::pair<sf::CircleShape*, float*>> independents;
     std::list<std::list<std::pair<sf::CircleShape*, float*>>::iterator> deleteReady;
-    std::list<sf::Transformable*> obstacles;
-    obstacles.push_back(&wall);
+    std::list<Obstacle*> obstacles;
+    obstacles.push_back(&hedge);
 
     int* direction{ new int[4]{ 0, 0, 0, 0 } };
     int* prevDirection{ new int[4]{0, 0, 0, 0} };
@@ -163,26 +168,6 @@ int main()
                             speed *= 1.5f;
                         if (event.key.code == sf::Keyboard::W)
                             speed /= 1.5f;
-                        if (event.key.code == sf::Keyboard::Space) {
-                            float* ballisticInfo = new float[5];
-                            if (direction[0] + direction[1] + direction[2] + direction[3] <= 0.0001f) {
-                                for (int i = 0; i < 4; i++)
-                                    ballisticInfo[i] = prevDirection[i];
-                            }
-                            else {
-                                for (int i = 0; i < 4; i++) {
-                                    ballisticInfo[i] = direction[i];
-                                }
-                            }
-                            ballisticInfo[4] = speed;
-                            sf::CircleShape* shot = new sf::CircleShape(15.0f);
-                            sf::Vector2f shotPos = testDude.getPosition();
-                            shotPos.x += 15.0f;
-                            shotPos.y += 15.0f;
-                            shot->setPosition(shotPos);
-                            shot->setFillColor(sf::Color::Magenta);
-                            independents.push_back(std::make_pair(shot, ballisticInfo));
-                        }
                     }
                 }
                 if (event.type == sf::Event::KeyReleased) {
@@ -203,43 +188,10 @@ int main()
             if (speed < 0)
                 speed = 0;
 
+            //iterate through game logic
+
             //clear the window, prepare to draw sprites
             window.clear(sf::Color::White);
-
-
-            //temporary iteration through "bullets" shot with space bar
-            for (auto it = independents.begin(); it != independents.end(); it++) {
-                bool collided = movesWithCollision(it->first, it->second, &elapsed, &obstacles, &window);
-                if (collided) {
-                    deleteReady.push_back(it);
-                }
-                /*
-                sf::Vector2f curPos = it->first->getPosition();
-                sf::Vector2f nextPos = it->first->getPosition();
-
-                float xdiff = (it->second[3] - it->second[2]) * it->second[4] * elapsed.asSeconds();
-                float ydiff = (it->second[1] - it->second[0]) * it->second[4] * elapsed.asSeconds();
-
-                if (abs(xdiff) >= 0.0001 && abs(ydiff) >= 0.0001) {
-                    xdiff = xdiff / 1.414f;
-                    ydiff = ydiff / 1.414f;
-                }
-                nextPos.x += xdiff;
-                nextPos.y += ydiff;
-                it->first->setPosition(nextPos);
-                window.draw(*(it->first));
-                */
-            }
-
-            //temporary iteration to delete "bullets" that collided with walls
-            auto curDelete = deleteReady.begin();
-            for (int i = 0; i < deleteReady.size(); i++) {
-                delete (*curDelete)->first;
-                delete(*curDelete)->second;
-                independents.erase(*curDelete);
-                curDelete++;
-            }
-            deleteReady.clear();
 
             //loop through physics stuff...
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
@@ -264,6 +216,7 @@ int main()
             //this isnt working for some reason?? nevermind im dumb
             window.draw(dude);
             window.draw(testDude);
+            window.draw(hedge);
 
             window.setView(view);
             window.display();
