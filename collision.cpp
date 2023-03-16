@@ -2,7 +2,8 @@
 #include <typeinfo>
 #include "collision.h";
 #include <math.h>
-#include "Interactable.h"
+#include <type_traits>
+
 bool collidesRectCirc(sf::RectangleShape* rect, sf::CircleShape* circ) {
 	sf::Vector2f circleCenter;
 	float circleRadius = circ->getRadius();
@@ -98,48 +99,32 @@ bool collidesCircCirc(sf::CircleShape* first, sf::CircleShape* second) {
 bool collidesSpriteSprite(sf::Sprite*first , sf::Sprite*second) {
 	return false;
 }
-bool collides(sf::Transformable* first, sf::Transformable* second) {
-	//confusing, and also not finished yet...
-	if ((typeid(*first) == typeid(sf::RectangleShape)) || ((typeid(*first) == typeid(Interactable)) && ((Interactable*) first)->getHitbox()->getShapeType() == 1)) {
+bool collides(sf::Shape* first, sf::Shape* second) {
+	//if first is a rectangle shape...
+	if (typeid(*first) == typeid(sf::RectangleShape)) {
 		if (typeid(*second) == typeid(sf::CircleShape)) {
 			return collidesRectCirc((sf::RectangleShape*) first, (sf::CircleShape*) second);
 		}
 		if (typeid(*second) == typeid(sf::RectangleShape)) {
 			return collidesRectRect((sf::RectangleShape*) first, (sf::RectangleShape*) second);
 		}
-		if (typeid(*second) == typeid(sf::Sprite)) {
-			return collidesRectSprite((sf::RectangleShape*) first, (sf::Sprite*) second);
-		}
 	}
-	//if second is rectangle shape or has a rectangular hitbox...
+	//if second is rectangle shape...
 	else if (typeid(*second) == typeid(sf::RectangleShape)) {
 		if (typeid(*first) == typeid(sf::CircleShape)) {
 			return collidesRectCirc((sf::RectangleShape*) second, (sf::CircleShape*) first);
 		}
-		if (typeid(*first) == typeid(sf::Sprite)) {
-			return collidesRectSprite((sf::RectangleShape*) second, (sf::Sprite*) first);
-		}
 	}
-	//if first is circle or has circular hitbox...
+	//if first is a circle shape...
 	else if (typeid(*first) == typeid(sf::CircleShape)) {
 		if (typeid(*second) == typeid(sf::CircleShape)) {
 			return collidesCircCirc((sf::CircleShape*) first, (sf::CircleShape*) second);
 		}
-		if (typeid(*second) == typeid(sf::Sprite)) {
-			return collidesCircSprite((sf::CircleShape*) first, (sf::Sprite*) second);
-		}
-	}
-	//if second is circle or has circular hitbox...
-	else if (typeid(*second) == typeid(sf::CircleShape)) {
-		if (typeid(*first) == typeid(sf::Sprite)) {
-			return collidesCircSprite((sf::CircleShape*) second, (sf::Sprite*) first);
-		}
-	}
-	//if first and second are sprites...
-	else if ((typeid(*first) == typeid(sf::Sprite)) && (typeid(*second) == typeid(sf::Sprite))) {
-		return collidesSpriteSprite((sf::Sprite*) first, (sf::Sprite*) second);
 	}
 	else {
 		return false;
 	}
+}
+bool collides(Interactable* first, Interactable* second) {
+	return collides(first->getHitbox()->getHitShape(), second->getHitbox()->getHitShape());
 }

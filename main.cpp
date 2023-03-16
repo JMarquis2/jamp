@@ -30,8 +30,6 @@ int main()
     sf::Time spriteUpdateElapsed;
     
     // shapes to test with 
-    sf::CircleShape* shape = new sf::CircleShape(50.f);
-    shape->setFillColor(sf::Color::Green);
     
     sf::CircleShape shape2(65.0f);
     shape2.setPosition(400, 400);
@@ -62,7 +60,7 @@ int main()
 
     //if you want to add another texture, you could also call importTexture(name);
 
-    Player testDude(sf::Vector2f(100.f, 100.f));
+    Player testDude(sf::Vector2f(0.f, 0.f));
     testDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
 
     Player dude(sf::Vector2f(0.f, 0.f));
@@ -138,28 +136,24 @@ int main()
                         direction[1] = 1;
                         y_pos = 200;
                         x_pos = (x_pos + 100) % 300;
-                        std::cout << x_pos << std::endl;
                         dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         direction[0] = 1;
                         y_pos = 300;
                         x_pos = (x_pos + 100) % 300;
-                        std::cout << x_pos << std::endl;
                         dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         direction[2] = 1;
                         y_pos = 100;
                         x_pos = (x_pos + 100) % 300;
-                        std::cout << x_pos << std::endl;
                         dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Right) {
                         direction[3] = 1;
                         y_pos = 0;
                         x_pos = (x_pos + 100) % 300;
-                        std::cout << x_pos << std::endl;
                         dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
                       
 
@@ -182,7 +176,7 @@ int main()
                             }
                             ballisticInfo[4] = speed;
                             sf::CircleShape* shot = new sf::CircleShape(15.0f);
-                            sf::Vector2f shotPos = shape->getPosition();
+                            sf::Vector2f shotPos = testDude.getPosition();
                             shotPos.x += 15.0f;
                             shotPos.y += 15.0f;
                             shot->setPosition(shotPos);
@@ -249,16 +243,6 @@ int main()
 
             //loop through physics stuff...
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
-            //std::cout << testDude.getPosition().x;
-            //std::cout << " " << testDude.getPosition().y << std::endl;
-            //std::cout << cardinalsToAngle(direction) << std::endl;
-            //shape moves
-            float* shapeMoveInfo = new float[5];
-            for (int i = 0; i < 4; i++) {
-                shapeMoveInfo[i] = direction[i];
-            }
-            shapeMoveInfo[4] = speed;
-            movesWithCollision(shape, shapeMoveInfo, &elapsed, &obstacles, &window);
             
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
@@ -269,21 +253,11 @@ int main()
                 testDude.updateTexture();
             }
 
-            //temporary collision checks
-            if (collides(shape, &wall2))
-                wall2.setFillColor(sf::Color::Red);      
-            else
-                wall2.setFillColor(sf::Color::Blue);
-            if (collides(shape, &shape2))
-                shape2.setFillColor(sf::Color::Red);
-            else
-                shape2.setFillColor(sf::Color::Cyan);
-            if (collides(shape, &quitZone))
-                window.close();
+            //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
+            //std::cout << testDude.getHitbox()->getHitShape()->getPosition().y << std::endl;
 
             //draw our drawable objects
             window.draw(quitZone);
-            window.draw(*shape);
             window.draw(shape2);
             window.draw(wall);
             window.draw(wall2);
@@ -303,6 +277,5 @@ int main()
     }
     delete[] direction;
     delete[] prevDirection;
-    delete shape;
     return 0;
 }

@@ -7,7 +7,6 @@ class Player : public Unit
 private:
 	//need to put textures and drawing into a base class.
 	sf::Texture* playerSheet;
-	sf::CircleShape defaultModel; //should never actually be called
 	sf::Vertex* model;
 	sf::Color color;
 	float width = 100.f;
