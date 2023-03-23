@@ -214,9 +214,9 @@ int main()
             window.draw(wall);
             window.draw(wall2);
             //this isnt working for some reason?? nevermind im dumb
+            window.draw(hedge);
             window.draw(dude);
             window.draw(testDude);
-            window.draw(hedge);
 
             window.setView(view);
             window.display();

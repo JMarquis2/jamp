@@ -6,9 +6,9 @@ class Unit : public Entity
 public:
 	Unit();
 	Unit(float _maxHP, float _maxMana, float _hpRegen, float _manaRegen, sf::Vector2f _position,
-		float radius, float _speed, float _directionAngle);
+		float hitboxRadius, float _speed, float _directionAngle, bool visibleHitbox = false);
 	Unit(float _maxHP, float _maxMana, float _hpRegen, float _manaRegen, sf::Vector2f _position,
-		float width, float height, float _speed, float _directionAngle);
+		float hitboxWidth, float hitboxHeight, float _speed, float _directionAngle, bool visibleHitbox = false);
 	~Unit();
 	float getCurrHP();
 	float takeDamage(float damage);

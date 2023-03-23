@@ -27,14 +27,17 @@ void Entity::setIdle(bool _isIdle) {
 bool Entity::getIdle() {
     return isIdle;
 }
-Entity::Entity(sf::Vector2f _position, float radius, float _speed, float _directionAngle) :
-    speed(_speed), directionAngle(_directionAngle), isIdle(true), Interactable(_position, radius) {
+Entity::Entity(sf::Vector2f _position, float hitboxRadius, float _speed, float _directionAngle, bool visibleHitbox) :
+    speed(_speed), directionAngle(_directionAngle), isIdle(true), Interactable(_position, hitboxRadius, visibleHitbox) {
 }
-Entity::Entity(sf::Vector2f _position, float width, float height, float _speed, float _directionAngle) :
-    speed(_speed), directionAngle(_directionAngle), isIdle(true), Interactable(_position, width, height) {
+Entity::Entity(sf::Vector2f _position, float hitboxWidth, float hitboxHeight, float _speed, float _directionAngle, bool visibleHitbox) :
+    speed(_speed), directionAngle(_directionAngle), isIdle(true), Interactable(_position, hitboxWidth, hitboxHeight, visibleHitbox) {
 }
 void Entity::moveToPosition(sf::Vector2f position) {
+    sf::Vector2f posDiff(this->getPosition());
+    posDiff.x = position.x - posDiff.x;
+    posDiff.y = position.y - posDiff.y;
     this->setPosition(position);
-    this->getHitbox()->getHitShape()->setPosition(position);
+    this->getHitbox()->getHitShape()->move(posDiff);
 }
 

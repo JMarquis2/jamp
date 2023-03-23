@@ -10,13 +10,16 @@ Player::Player() : Unit(100.f, 100.f, 5.f, 5.f, sf::Vector2f(0.f, 0.f), 50.f, 10
 	playerSheet = nullptr;
 	model = nullptr;
 }
-Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 50.f, 100.f, 0.f), texHeight(0), texWidth(0), color(sf::Color::Cyan){
+Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 25.f, 50.f, 0.f, true), texHeight(0), texWidth(0), color(sf::Color::Cyan){
 	model = new sf::Vertex[4];
 	model[0].position = sf::Vector2f(0.f, 0.f);
 	model[1].position = sf::Vector2f(width, 0.f);
 	model[2].position = sf::Vector2f(width, height);
 	model[3].position = sf::Vector2f(0.f, height);
 	playerSheet = nullptr;
+
+	//temporary? this should probably be done in another way...
+	this->getHitbox()->getHitShape()->setPosition(sf::Vector2f(position.x + 25.f, position.y + 50.f));
 }
 void Player::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, sf::Vector2i texPos) {
 	playerSheet = textureInfo.second;
@@ -31,9 +34,10 @@ void Player::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, 
 //or assignment operator or something.
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	if (playerSheet) {
+		target.draw(*(getHitbox()->getHitShape()), states);
 		states.texture = playerSheet;
 		states.transform = this->getTransform();
-		target.draw(model, 4, sf::Quads, states);
+		target.draw(model, 4, sf::Quads, states); 
 		//target.draw(vertices, states);
 	}
 	else {
