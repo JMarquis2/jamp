@@ -9,7 +9,7 @@ Wall::Wall() : texHeight(0), texWidth(0), width(0.f), height(0.f), Obstacle() {
 	wallTexture = nullptr;
 	model = nullptr;
 }
-Wall::Wall(sf::Vector2f _position, float _width, float _height) : texHeight(0), texWidth(0), width(_width), height(_height), Obstacle(_position, width, height){
+Wall::Wall(sf::Vector2f _position, float _width, float _height) : texHeight(0), texWidth(0), width(_width), height(_height), Obstacle(_position, _width, _height){
 	model = new sf::Vertex[4];
 	model[0].position = sf::Vector2f(0.f, 0.f);
 	model[1].position = sf::Vector2f(width, 0.f);
