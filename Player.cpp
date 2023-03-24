@@ -4,23 +4,29 @@
 #include <iostream>
 //this guy right here
 Player::~Player() {
-	delete[] model;
+	//delete[] model;
 }
-Player::Player() : Unit(100.f, 100.f, 5.f, 5.f, sf::Vector2f(0.f, 0.f), 50.f, 100.f, 100.f, 0.f), texHeight(0), texWidth(0), color(sf::Color::Cyan) {
+Player::Player() : Unit(100.f, 100.f, 5.f, 5.f, sf::Vector2f(0.f, 0.f), 50.f, 100.f, 100.f, 0.f), color(sf::Color::Cyan) {
+	/*
 	playerSheet = nullptr;
 	model = nullptr;
+	*/
 }
-Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 25.f, 50.f, 0.f, true), texHeight(0), texWidth(0), color(sf::Color::Cyan){
+Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 25.f, 50.f, 0.f, true), color(sf::Color::Cyan){
+	/*
 	model = new sf::Vertex[4];
 	model[0].position = sf::Vector2f(0.f, 0.f);
 	model[1].position = sf::Vector2f(width, 0.f);
 	model[2].position = sf::Vector2f(width, height);
 	model[3].position = sf::Vector2f(0.f, height);
 	playerSheet = nullptr;
+	*/
 
 	//temporary? this should probably be done in another way...
 	this->getHitbox()->getHitShape()->setPosition(sf::Vector2f(position.x + 25.f, position.y + 50.f));
-}
+	dimensions.x = 100.f;
+	dimensions.y = 100.f;
+}/*
 void Player::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, sf::Vector2i texPos) {
 	playerSheet = textureInfo.second;
 	texWidth = textureInfo.first->at(0);
@@ -30,8 +36,10 @@ void Player::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, 
 	}
 	setTexturePosition(texPos);
 }
+
 //for some reason, when this is called, the player object doesnt have its correct member values. I suspect its a problem with a copy constructor
 //or assignment operator or something.
+
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	if (playerSheet) {
 		target.draw(*(getHitbox()->getHitShape()), states);
@@ -44,13 +52,14 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		std::cout << "error: no sprite set for Player class" << std::endl;
 	}
 }
+
 void Player::setTexturePosition(sf::Vector2i texPos) {
 	texturePosition.x = texPos.x;
 	texturePosition.y = texPos.y;
 	model[0].texCoords = sf::Vector2f((float) texturePosition.x, (float) texturePosition.y);
-	model[1].texCoords = sf::Vector2f((float) texturePosition.x + width, (float) texturePosition.y);
-	model[2].texCoords = sf::Vector2f((float) texturePosition.x + width, (float) texturePosition.y + height);
-	model[3].texCoords = sf::Vector2f((float) texturePosition.x, (float) texturePosition.y + height);
+	model[1].texCoords = sf::Vector2f((float) texturePosition.x + texWidth, (float) texturePosition.y);
+	model[2].texCoords = sf::Vector2f((float) texturePosition.x + texWidth, (float) texturePosition.y + texHeight);
+	model[3].texCoords = sf::Vector2f((float) texturePosition.x, (float) texturePosition.y + texHeight);
 }
 void Player::updateTexture() {
 	int* facing = angleToCardinals(this->getAngle());
@@ -69,3 +78,4 @@ void Player::updateTexture() {
 	texturePosition.x = (texturePosition.x + texWidth) % (frameNumbers[texturePosition.y / texHeight] * texWidth);
 	setTexturePosition(texturePosition);
 }
+*/

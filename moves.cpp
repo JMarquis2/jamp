@@ -7,8 +7,8 @@
 //moveInfo is a 5-length array which contains first the directions being traveled, then the speed.
 #define PI 3.14159265f
 
-int* angleToCardinals(float angle) {
-    int directionArray[] = { 0, 0, 0, 0 };
+std::vector<int> angleToCardinals(float angle) {
+    std::vector<int> directionArray(4, 0);
     float x = round(cos(angle * PI / 180.0f));
     float y = round(sin(angle * PI / 180.0f));
     if (abs(x - 1.f) < 0.0001)

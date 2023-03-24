@@ -18,6 +18,7 @@ public:
 	 void setAngle(float _angle);
 	 void setAngle(int* directions);
 	 void setIdle(bool _isIdle);
+	 void updateTexture();
 private:
 	float speed;
 	float directionAngle;
