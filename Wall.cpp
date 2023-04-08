@@ -3,20 +3,26 @@
 #include <iostream>
 
 Wall::~Wall() {
-	delete model;
+	//delete model;
 }
-Wall::Wall() : texHeight(0), texWidth(0), width(0.f), height(0.f), Obstacle() {
-	wallTexture = nullptr;
-	model = nullptr;
+Wall::Wall() : Obstacle() {
+	dimensions.x = 0.f;
+	dimensions.y = 0.f;
+	//wallTexture = nullptr;
+	//model = nullptr;
 }
-Wall::Wall(sf::Vector2f _position, float _width, float _height) : texHeight(0), texWidth(0), width(_width), height(_height), Obstacle(_position, _width, _height){
+Wall::Wall(sf::Vector2f _position, float width, float height) : Obstacle(_position, width, height){
+	dimensions.x = width;
+	dimensions.y = height;
+	/*
 	model = new sf::Vertex[4];
 	model[0].position = sf::Vector2f(0.f, 0.f);
 	model[1].position = sf::Vector2f(width, 0.f);
 	model[2].position = sf::Vector2f(width, height);
 	model[3].position = sf::Vector2f(0.f, height);
 	wallTexture = nullptr;
-}
+	*/
+}/*
 void Wall::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, sf::Vector2i texPos) {
 	wallTexture = textureInfo.second;
 	texWidth = textureInfo.first->at(0);
@@ -50,3 +56,4 @@ void Wall::updateTexture() {
 	texturePosition.x = (texturePosition.x + texWidth) % (frameNumbers[texturePosition.y / texHeight] * texWidth);
 	setTexturePosition(texturePosition);
 }
+*/

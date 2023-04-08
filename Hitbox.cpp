@@ -33,3 +33,6 @@ sf::Shape* Hitbox::getHitShape() const{
 int Hitbox::getShapeType() {
 	return shapeType;
 }
+bool Hitbox::getVisible() {
+	return isVisible;
+}

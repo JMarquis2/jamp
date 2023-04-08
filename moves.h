@@ -2,7 +2,7 @@
 #include <list>
 #include "Entity.h"
 #include "Obstacle.h"
-int* angleToCardinals(float angle);
+std::vector<int> angleToCardinals(float angle);
 float cardinalsToAngle(int* cardinals);
 
 //bool movesWithCollision(sf::Shape* mover, float* moveInfo, sf::Time* elapsed, std::list<Obstacle*>* obstacles, sf::RenderWindow* window);
