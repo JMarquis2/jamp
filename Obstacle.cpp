@@ -21,27 +21,38 @@ void Obstacle::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo
 	Interactable::importTexture(textureInfo);
 	sf::Vector2i texDimensions = getTextureDimensions();
 
-	int columns = dimensions.y / texDimensions.y;
+	int rows = dimensions.y / texDimensions.y;
 	if (dimensions.y % texDimensions.y != 0)
-		columns += 1;
-	int rows = dimensions.x / texDimensions.x;
-	if (dimensions.x % texDimensions.x != 0)
 		rows += 1;
+	int columns = dimensions.x / texDimensions.x;
+	if (dimensions.x % texDimensions.x != 0)
+		columns += 1;
 	sf::Vertex* model = new sf::Vertex[rows * columns * 4];
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < columns; j++) {
-			model[4 * ((i * columns) + j)].position = sf::Vector2f(i * texDimensions.x, j * texDimensions.y);
-			model[4 * ((i * columns) + j) + 1].position = sf::Vector2f((i + 1) * texDimensions.x, j * texDimensions.y);
-			model[4 * ((i * columns) + j) + 2].position = sf::Vector2f((i + 1) * texDimensions.x, (j + 1) * texDimensions.y);
-			model[4 * ((i * columns) + j) + 3].position = sf::Vector2f(i * texDimensions.x, (j + 1) * texDimensions.y);
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			int currRight = (i + 1) * texDimensions.x;
+			int texRight = texDimensions.x;
+			int currBot = (j + 1) * texDimensions.y;
+			int texBot = texDimensions.y;
+			if (currRight > dimensions.x) {
+				currRight = i * texDimensions.x + dimensions.x % texDimensions.x;
+				texRight = dimensions.x % texDimensions.x;
+			}
+			if (currBot > dimensions.y) {
+				currBot = j * texDimensions.y + dimensions.y % texDimensions.y;
+				texBot = dimensions.y % texDimensions.y;
+			}
+			model[4 * ((i * rows) + j)].position = sf::Vector2f(i * texDimensions.x, j * texDimensions.y);
+			model[4 * ((i * rows) + j) + 1].position = sf::Vector2f(currRight, j * texDimensions.y);
+			model[4 * ((i * rows) + j) + 2].position = sf::Vector2f(currRight, currBot);
+			model[4 * ((i * rows) + j) + 3].position = sf::Vector2f(i * texDimensions.x, currBot);
 
-			model[4 * ((i * columns) + j)].texCoords = sf::Vector2f(0.f, 0.f);
-			model[4 * ((i * columns) + j) + 1].texCoords = sf::Vector2f(texDimensions.x, 0.f);
-			model[4 * ((i * columns) + j) + 2].texCoords = sf::Vector2f(texDimensions.x, texDimensions.y);
-			model[4 * ((i * columns) + j) + 3].texCoords = sf::Vector2f(0.f, texDimensions.y);
+			model[4 * ((i * rows) + j)].texCoords = sf::Vector2f(0.f, 0.f);
+			model[4 * ((i * rows) + j) + 1].texCoords = sf::Vector2f(texRight, 0.f);
+			model[4 * ((i * rows) + j) + 2].texCoords = sf::Vector2f(texRight, texBot);
+			model[4 * ((i * rows) + j) + 3].texCoords = sf::Vector2f(0.f, texBot);
+
 		}
 	}
 	setTextureModel(model, rows * columns * 4);
-	
-	getTexture()->setRepeated(true);
 }

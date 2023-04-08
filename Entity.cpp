@@ -67,6 +67,6 @@ void Entity::updateTexture() {
 	}
 	newX = (getTexturePosition().x + dimensions.x) % (getFrameNumbers()->at(newY) * dimensions.x);
 	newY *= dimensions.y;
-	setTexturePosition(sf::Vector2i(newX, newY));
+	setTextureCoords(sf::Vector2i(newX, newY));
 }
 

@@ -69,7 +69,7 @@ int main()
     Player dude(sf::Vector2f(0.f, 0.f));
     dude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
 
-    Wall hedge(sf::Vector2f(500.f, 500.f), 150, 50);
+    Wall hedge(sf::Vector2f(500.f, 500.f), 200, 30);
     hedge.setTexture(texmachine.getTextureInfo("Hedge"), sf::Vector2i(0, 0));
     
     int x_pos = 0;
@@ -142,25 +142,25 @@ int main()
                         direction[1] = 1;
                         y_pos = 200;
                         x_pos = (x_pos + 100) % 300;
-                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
+                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         direction[0] = 1;
                         y_pos = 300;
                         x_pos = (x_pos + 100) % 300;
-                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
+                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         direction[2] = 1;
                         y_pos = 100;
                         x_pos = (x_pos + 100) % 300;
-                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
+                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Right) {
                         direction[3] = 1;
                         y_pos = 0;
                         x_pos = (x_pos + 100) % 300;
-                        dude.setTexturePosition(sf::Vector2i(x_pos, y_pos));
+                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
                       
 
                     }
