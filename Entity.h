@@ -18,6 +18,7 @@ public:
 	 void setAngle(float _angle);
 	 void setAngle(int* directions);
 	 void setIdle(bool _isIdle);
+	 void setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, sf::Vector2i texPos);
 	 void updateTexture();
 private:
 	float speed;

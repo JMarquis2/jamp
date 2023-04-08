@@ -14,12 +14,14 @@ public:
 	Interactable(sf::Vector2f _position, float hitboxWidth, float hitboxHeight, bool visibleHitbox = false);
 	Interactable();
 	Hitbox* getHitbox() const;
-	void setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, sf::Vector2i texPos);
+	void importTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo);
+	void setTextureCoords(sf::Vector2i texCoords);
 	void setTexturePosition(sf::Vector2i texPos);
 	sf::Vector2i getTexturePosition();
 	sf::Vector2i getTextureDimensions();
 	std::vector<int>* getFrameNumbers();
-
+	sf::Vertex* getModel();
+	void setTextureModel(sf::Vertex* _model, int _modelSize);
 	sf::Texture* getTexture();
 private:
 	//hitbox stuff?
@@ -33,6 +35,7 @@ private:
 	std::vector<int> frameNumbers;
 	sf::Vector2i texturePosition;
 	sf::Vertex* model;
+	int modelSize;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

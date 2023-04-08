@@ -41,6 +41,13 @@ void Entity::moveToPosition(sf::Vector2f position) {
     this->setPosition(position);
     this->getHitbox()->getHitShape()->move(posDiff);
 }
+void Entity::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, sf::Vector2i texCoords) {
+	importTexture(textureInfo);
+	sf::Vertex* model = new sf::Vertex[4];
+	setTextureModel(model, 4);
+	setTexturePosition(sf::Vector2i(0, 0));
+	setTextureCoords(texCoords);
+}
 void Entity::updateTexture() {
 	std::vector<int> facing = angleToCardinals(this->getAngle());
 	int newX = 0;

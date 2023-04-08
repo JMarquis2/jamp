@@ -27,6 +27,7 @@ int main()
     sf::Time currTime;
     sf::Time elapsed;
 
+    //currently set to 1/12 of a second. Customizable...
     sf::Time spriteUpdateTimer = sf::seconds(0.0833333f);
     sf::Time spriteUpdateElapsed;
     
@@ -52,7 +53,7 @@ int main()
 
     //example:use texturemanager
 
-    //first, add all texture names to vector.
+    //first, add all texture names to vector. Eventually, this could even be read from a file.
     std::vector<std::string> textureNames;
     textureNames.push_back("player_knight");
     textureNames.push_back("Hedge");
