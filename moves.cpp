@@ -5,10 +5,10 @@
 #include "Entity.h"
 #include <math.h>
 //moveInfo is a 5-length array which contains first the directions being traveled, then the speed.
-#define PI 3.14159265
+#define PI 3.14159265f
 
 int* angleToCardinals(float angle) {
-    int* directionArray = new int[4]{ 0, 0, 0, 0 };
+    int directionArray[] = { 0, 0, 0, 0 };
     float x = round(cos(angle * PI / 180.0f));
     float y = round(sin(angle * PI / 180.0f));
     if (abs(x - 1.f) < 0.0001)
@@ -30,11 +30,11 @@ float cardinalsToAngle(int* cardinals) {
         angle = atan2((float)ydiff, (float)xdiff);
     }
     else
-        angle = 2 * PI - (-1 * atan2((float)ydiff, (float)xdiff));
+        angle = 2 * PI - (-1.f * atan2((float)ydiff, (float)xdiff));
     return (angle * 180.f / PI);
 }
-
-bool movesWithCollision(sf::Shape* mover, float* moveInfo, sf::Time* elapsed, std::list<sf::Transformable*>* obstacles, sf::RenderWindow* window){
+/*
+bool movesWithCollision(sf::Shape* mover, float* moveInfo, sf::Time* elapsed, std::list<Obstacle*>* obstacles, sf::RenderWindow* window){
 	float curX = mover->getPosition().x;
 	float curY = mover->getPosition().y;
     sf::Vector2f curPos = mover->getPosition();
@@ -74,7 +74,7 @@ bool movesWithCollision(sf::Shape* mover, float* moveInfo, sf::Time* elapsed, st
     window->draw(*mover);
     return collided;
 }
-bool movesWithCollision(sf::Sprite* mover, float* moveInfo, sf::Time* elapsed, std::list<sf::Transformable*>* obstacles, sf::RenderWindow* window) {
+bool movesWithCollision(sf::Sprite* mover, float* moveInfo, sf::Time* elapsed, std::list<Obstacle*>* obstacles, sf::RenderWindow* window) {
     float curX = mover->getPosition().x;
     float curY = mover->getPosition().y;
     sf::Vector2f curPos = mover->getPosition();
@@ -114,14 +114,18 @@ bool movesWithCollision(sf::Sprite* mover, float* moveInfo, sf::Time* elapsed, s
     window->draw(*mover);
     return collided;
 }
-
-bool movesWithCollision(Entity* mover, float angle, float dist, sf::Time* elapsed, std::list<Interactable*>* obstacles, sf::RenderWindow* window) {
+*/
+bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list<Obstacle*>* obstacles, sf::RenderWindow* window) {
+    if (mover->getIdle()) {
+        return false;
+    }
     sf::Vector2f curPos = mover->getPosition();
     sf::Vector2f nextPos = mover->getPosition();
     bool collided = false;
+    float dist = elapsed->asSeconds() * mover->getSpeed();
 
-    float xdiff = cos(angle) * dist * elapsed->asSeconds();
-    float ydiff = sin(angle) * dist * elapsed->asSeconds();
+    float xdiff = cos(angle * PI / 180.f) * dist;
+    float ydiff = -1 * sin(angle * PI / 180.f) * dist;
 
     nextPos.x += xdiff;
     mover->moveToPosition(nextPos);

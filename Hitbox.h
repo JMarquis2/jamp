@@ -4,11 +4,12 @@ class Hitbox
 {
 public:
 	~Hitbox();
-	Hitbox(float* shapeInfo, int _shapeType);
-	sf::Shape* getHitShape();
+	Hitbox(float* shapeInfo, int _shapeType, bool _isVisible = false);
+	sf::Shape* getHitShape() const;
 	int getShapeType();
 private:
 	sf::Shape* hitShape;
 	int shapeType;
+	bool isVisible;
 };
 
