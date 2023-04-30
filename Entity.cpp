@@ -49,6 +49,10 @@ void Entity::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, 
 	setTextureCoords(texCoords);
 }
 void Entity::updateTexture() {
+	//right now this is how I'll deal with idle animation. In the future, we would have an idle animation, too.
+	if (this->isIdle) {
+		return;
+	}
 	std::vector<int> facing = angleToCardinals(this->getAngle());
 	int newX = 0;
 	int newY = 0;

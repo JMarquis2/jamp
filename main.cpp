@@ -14,6 +14,7 @@
 #include "TextureManager.h"
 #include <iostream>
 #include "Wall.h"
+#include "Terrain.h"
 
 int main()
 {
@@ -57,6 +58,8 @@ int main()
     std::vector<std::string> textureNames;
     textureNames.push_back("player_knight");
     textureNames.push_back("Hedge");
+    textureNames.push_back("ground");
+    textureNames.push_back("grass");
 
     //then, construct texturemanager using vector.
     TextureManager texmachine(textureNames);
@@ -71,6 +74,17 @@ int main()
 
     Wall hedge(sf::Vector2f(500.f, 500.f), 200, 30);
     hedge.setTexture(texmachine.getTextureInfo("Hedge"), sf::Vector2i(0, 0));
+
+    Terrain grassyTerrain(sf::Vector2f(0.f, 0.f), 1000, 1000);
+    grassyTerrain.setTexture(texmachine.getTextureInfo("grass"));
+
+    sf::Sprite testgrass1;
+    sf::Sprite testgrass2;
+    sf::Sprite testgrass3;
+    sf::Sprite testgrass4;
+    sf::Sprite testgrass5;
+    testgrass1.setTexture(*(texmachine.getTextureInfo("ground").second));
+    testgrass1.setPosition(sf::Vector2f(1000.f, 1000.f));
     
     int x_pos = 0;
     int y_pos = 0;
@@ -161,8 +175,6 @@ int main()
                         y_pos = 0;
                         x_pos = (x_pos + 100) % 300;
                         dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
-                      
-
                     }
                     if (!menuOpen) {
                         if (event.key.code == sf::Keyboard::Q)
@@ -210,14 +222,17 @@ int main()
             //std::cout << testDude.getHitbox()->getHitShape()->getPosition().y << std::endl;
 
             //draw our drawable objects
+            window.draw(grassyTerrain);
             window.draw(quitZone);
             window.draw(shape2);
             window.draw(wall);
             window.draw(wall2);
             //this isnt working for some reason?? nevermind im dumb
             window.draw(hedge);
+            window.draw(testgrass1);
             window.draw(dude);
             window.draw(testDude);
+            
 
             window.setView(view);
             window.display();
