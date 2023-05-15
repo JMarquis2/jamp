@@ -60,6 +60,7 @@ int main()
     textureNames.push_back("Hedge");
     textureNames.push_back("ground");
     textureNames.push_back("grass");
+    textureNames.push_back("cobble");
 
     //then, construct texturemanager using vector.
     TextureManager texmachine(textureNames);
@@ -77,6 +78,10 @@ int main()
 
     Terrain grassyTerrain(sf::Vector2f(0.f, 0.f), 1000, 1000);
     grassyTerrain.setTexture(texmachine.getTextureInfo("grass"));
+
+    Terrain cobbleTerrain(sf::Vector2f(1000.f, 0.f), 1000, 1000);
+    cobbleTerrain.setTexture(texmachine.getTextureInfo("cobble"));
+
 
     sf::Sprite testgrass1;
     sf::Sprite testgrass2;
@@ -223,6 +228,7 @@ int main()
 
             //draw our drawable objects
             window.draw(grassyTerrain);
+            window.draw(cobbleTerrain);
             window.draw(quitZone);
             window.draw(shape2);
             window.draw(wall);
