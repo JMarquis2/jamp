@@ -14,5 +14,6 @@ private:
 public:
 	int Poll();
 	Button(int _target, std::string _description, sf::Vector2f _position, sf::Vector2f _dimensions);
+	int Click(sf::Vector2f mousePosition);
 };
 
