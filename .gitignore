@@ -1,4 +1,9 @@
 Debug
+Release
 JAMP_GAME.vcxproj
 JAMP_GAME.vcxproj.filters
 JAMP_GAME.vcxproj.user
+SFML.vcxproj
+SFML.vcxproj.filters
+SFML.vcxproj.user
+martin old stuff
