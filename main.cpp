@@ -11,6 +11,7 @@
 #include "Interactable.h"
 #include "Hitbox.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "TextureManager.h"
 #include <iostream>
 #include "Wall.h"
@@ -46,10 +47,6 @@ int main()
     wall2.setPosition(250, 150);
     wall2.setFillColor(sf::Color::Blue);
 
-
-    sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
-    quitZone.setPosition(700, 550);
-    quitZone.setFillColor(sf::Color::Red);
  
 
     //example:use texturemanager
@@ -57,6 +54,7 @@ int main()
     //first, add all texture names to vector. Eventually, this could even be read from a file.
     std::vector<std::string> textureNames;
     textureNames.push_back("player_knight");
+    textureNames.push_back("enemy");
     textureNames.push_back("Hedge");
     textureNames.push_back("ground");
     textureNames.push_back("grass");
@@ -69,9 +67,9 @@ int main()
 
     Player testDude(sf::Vector2f(0.f, 0.f));
     testDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
-
-    Player dude(sf::Vector2f(0.f, 0.f));
-    dude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
+    
+    Enemy badDude(sf::Vector2f(0.f, 0.f));
+    badDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
 
     Wall hedge(sf::Vector2f(500.f, 500.f), 200, 30);
     hedge.setTexture(texmachine.getTextureInfo("Hedge"), sf::Vector2i(0, 0));
@@ -134,11 +132,15 @@ int main()
                 for (int i = 0; i < 4; i++)
                     prevDirection[i] = direction[i];
                 testDude.setIdle(false);
+                badDude.setIdle(false);
+
             }
             else {
                 testDude.setIdle(true);
+           
             }
             testDude.setAngle(cardinalsToAngle(prevDirection));
+            badDude.setAngle(entityToEntityAngle(badDude.getPosition(), testDude.getPosition()));
             //update view
             view.setCenter(testDude.getPosition());
 
@@ -159,27 +161,19 @@ int main()
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         direction[1] = 1;
-                        y_pos = 200;
-                        x_pos = (x_pos + 100) % 300;
-                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
+
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         direction[0] = 1;
-                        y_pos = 300;
-                        x_pos = (x_pos + 100) % 300;
-                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
+
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         direction[2] = 1;
-                        y_pos = 100;
-                        x_pos = (x_pos + 100) % 300;
-                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
+
                     }
                     if (event.key.code == sf::Keyboard::Right) {
                         direction[3] = 1;
-                        y_pos = 0;
-                        x_pos = (x_pos + 100) % 300;
-                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
+
                     }
                     if (!menuOpen) {
                         if (event.key.code == sf::Keyboard::Q)
@@ -213,6 +207,7 @@ int main()
 
             //loop through physics stuff...
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
+            movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles, & window);
             
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
@@ -221,6 +216,7 @@ int main()
                 loop through every animated object, run "update sprite" function
                 */
                 testDude.updateTexture();
+                badDude.updateTexture();
             }
 
             //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
@@ -229,17 +225,14 @@ int main()
             //draw our drawable objects
             window.draw(grassyTerrain);
             window.draw(cobbleTerrain);
-            window.draw(quitZone);
             window.draw(shape2);
             window.draw(wall);
             window.draw(wall2);
             //this isnt working for some reason?? nevermind im dumb
             window.draw(hedge);
             window.draw(testgrass1);
-            window.draw(dude);
             window.draw(testDude);
-            
-
+            window.draw(badDude);
             window.setView(view);
             window.display();
         }
