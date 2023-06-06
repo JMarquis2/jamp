@@ -44,10 +44,11 @@ void Entity::moveToPosition(sf::Vector2f position) {
 void Entity::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo, sf::Vector2i texCoords) {
 	importTexture(textureInfo);
 	sf::Vertex* model = new sf::Vertex[4];
-	setTextureModel(model, 4);
+	setModel(model, 4);
 	setTexturePosition(sf::Vector2i(0, 0));
 	setTextureCoords(texCoords);
 }
+//this updateTexture function can be overridden in a derived class. Its job is to update the texture, and is usually called each frame.
 void Entity::updateTexture() {
 	//right now this is how I'll deal with idle animation. In the future, we would have an idle animation, too.
 	if (this->isIdle) {

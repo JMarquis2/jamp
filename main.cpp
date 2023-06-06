@@ -15,6 +15,7 @@
 #include <iostream>
 #include "Wall.h"
 #include "Terrain.h"
+#include "Attack.h"
 
 int main()
 {
@@ -104,6 +105,10 @@ int main()
 
     int* direction{ new int[4]{ 0, 0, 0, 0 } };
     int* prevDirection{ new int[4]{0, 0, 0, 0} };
+
+    std::list<Attack*> hits;
+    std::list<Attack*> deleteHits;
+
     //up, down, left, right
     float speed = 500.f;
     testDude.setSpeed(speed);
@@ -159,27 +164,18 @@ int main()
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         direction[1] = 1;
-                        y_pos = 200;
-                        x_pos = (x_pos + 100) % 300;
-                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         direction[0] = 1;
-                        y_pos = 300;
-                        x_pos = (x_pos + 100) % 300;
-                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         direction[2] = 1;
-                        y_pos = 100;
-                        x_pos = (x_pos + 100) % 300;
-                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
                     }
                     if (event.key.code == sf::Keyboard::Right) {
                         direction[3] = 1;
-                        y_pos = 0;
-                        x_pos = (x_pos + 100) % 300;
-                        dude.setTextureCoords(sf::Vector2i(x_pos, y_pos));
+                    }
+                    if (event.key.code == sf::Keyboard::Space) {
+                        hits.push_back(testDude.hit());
                     }
                     if (!menuOpen) {
                         if (event.key.code == sf::Keyboard::Q)
@@ -221,12 +217,23 @@ int main()
                 loop through every animated object, run "update sprite" function
                 */
                 testDude.updateTexture();
+                
+                //update hits
+                for (auto it = hits.begin(); it != hits.end(); it++) {
+                    if (!((*it)->update(spriteUpdateTimer))) {
+                        delete (*it);
+                        it = hits.erase(it);
+                        if (it == hits.end())
+                            break;
+                    }
+                }
             }
 
             //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
             //std::cout << testDude.getHitbox()->getHitShape()->getPosition().y << std::endl;
 
             //draw our drawable objects
+
             window.draw(grassyTerrain);
             window.draw(cobbleTerrain);
             window.draw(quitZone);
@@ -236,6 +243,11 @@ int main()
             //this isnt working for some reason?? nevermind im dumb
             window.draw(hedge);
             window.draw(testgrass1);
+
+            //loop through hits
+            for (auto it = hits.begin(); it != hits.end(); it++) {
+                window.draw(**it);
+            }
             window.draw(dude);
             window.draw(testDude);
             
