@@ -33,6 +33,16 @@ float cardinalsToAngle(int* cardinals) {
         angle = 2 * PI - (-1.f * atan2((float)ydiff, (float)xdiff));
     return (angle * 180.f / PI);
 }
+float entityToEntityAngle(sf::Vector2f entityPos, sf::Vector2f entity2Pos) {
+    sf::Vector2f distance = entityPos - entity2Pos;
+    float angle = 0.f;
+    if (distance.y >= 0) {
+        angle = atan2((float)distance.y, -1*(float)distance.x);
+    }
+    else
+        angle = 2 * PI - (-1.f * atan2((float)distance.y, -1 * (float)distance.x));
+    return (angle * 180.f / PI);
+}
 bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list<Obstacle*>* obstacles, sf::RenderWindow* window) {
     if (mover->getIdle()) {
         return false;

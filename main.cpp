@@ -11,6 +11,7 @@
 #include "Interactable.h"
 #include "Hitbox.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "TextureManager.h"
 #include <iostream>
 #include "Wall.h"
@@ -47,10 +48,6 @@ int main()
     wall2.setPosition(250, 150);
     wall2.setFillColor(sf::Color::Blue);
 
-
-    sf::RectangleShape quitZone(sf::Vector2f(50.0f, 50.0f));
-    quitZone.setPosition(700, 550);
-    quitZone.setFillColor(sf::Color::Red);
  
 
     //example:use texturemanager
@@ -58,6 +55,7 @@ int main()
     //first, add all texture names to vector. Eventually, this could even be read from a file.
     std::vector<std::string> textureNames;
     textureNames.push_back("player_knight");
+    textureNames.push_back("enemy");
     textureNames.push_back("Hedge");
     textureNames.push_back("ground");
     textureNames.push_back("grass");
@@ -70,9 +68,9 @@ int main()
 
     Player testDude(sf::Vector2f(0.f, 0.f));
     testDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
-
-    Player dude(sf::Vector2f(0.f, 0.f));
-    dude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
+    
+    Enemy badDude(sf::Vector2f(0.f, 0.f));
+    badDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
 
     Wall hedge(sf::Vector2f(500.f, 500.f), 200, 30);
     hedge.setTexture(texmachine.getTextureInfo("Hedge"), sf::Vector2i(0, 0));
@@ -139,11 +137,15 @@ int main()
                 for (int i = 0; i < 4; i++)
                     prevDirection[i] = direction[i];
                 testDude.setIdle(false);
+                badDude.setIdle(false);
+
             }
             else {
                 testDude.setIdle(true);
+           
             }
             testDude.setAngle(cardinalsToAngle(prevDirection));
+            badDude.setAngle(entityToEntityAngle(badDude.getPosition(), testDude.getPosition()));
             //update view
             view.setCenter(testDude.getPosition());
 
@@ -209,6 +211,7 @@ int main()
 
             //loop through physics stuff...
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
+            movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles, & window);
             
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
@@ -227,6 +230,7 @@ int main()
                             break;
                     }
                 }
+                badDude.updateTexture();
             }
 
             //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
@@ -236,7 +240,6 @@ int main()
 
             window.draw(grassyTerrain);
             window.draw(cobbleTerrain);
-            window.draw(quitZone);
             window.draw(shape2);
             window.draw(wall);
             window.draw(wall2);
@@ -248,10 +251,8 @@ int main()
             for (auto it = hits.begin(); it != hits.end(); it++) {
                 window.draw(**it);
             }
-            window.draw(dude);
             window.draw(testDude);
-            
-
+            window.draw(badDude);
             window.setView(view);
             window.display();
         }
