@@ -45,9 +45,8 @@ int main()
     wall.setFillColor(sf::Color::Black);
 
     sf::RectangleShape wall2(sf::Vector2f(100.0f, 20.0f));
-    wall2.setPosition(250, 150);
+    wall2.setPosition(500, 100);
     wall2.setFillColor(sf::Color::Blue);
-
  
 
     //example:use texturemanager
