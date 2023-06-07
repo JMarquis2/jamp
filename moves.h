@@ -2,6 +2,8 @@
 #include <list>
 #include "Entity.h"
 #include "Obstacle.h"
+//up down left right
+
 std::vector<int> angleToCardinals(float angle);
 float cardinalsToAngle(int* cardinals);
 float entityToEntityAngle(sf::Vector2f entity, sf::Vector2f Player);

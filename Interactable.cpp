@@ -66,16 +66,14 @@ std::vector<int>* Interactable::getFrameNumbers(){
 	return &(frameNumbers);
 }
 void Interactable::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	if (textureSheet) {
-		if(getHitbox()->getVisible())
-			target.draw(*(getHitbox()->getHitShape()), states);
+	if (textureSheet)
 		states.texture = textureSheet;
-		states.transform = this->getTransform();
-		target.draw(model, modelSize, sf::Quads, states);
-	}
-	else {
-		
-	}
+
+	if(getHitbox()->getVisible())
+		target.draw(*(getHitbox()->getHitShape()), states);
+
+	states.transform = this->getTransform();
+	target.draw(model, modelSize, sf::Quads, states);
 }
 sf::Texture* Interactable::getTexture() {
 	return textureSheet;
@@ -83,7 +81,7 @@ sf::Texture* Interactable::getTexture() {
 sf::Vertex* Interactable::getModel() {
 	return model;
 }
-void Interactable::setTextureModel(sf::Vertex* _model, int _modelSize) {
+void Interactable::setModel(sf::Vertex* _model, int _modelSize) {
 	model = _model;
 	modelSize = _modelSize;
 }
