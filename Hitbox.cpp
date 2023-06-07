@@ -8,6 +8,7 @@ Hitbox::~Hitbox() {
 	else
 		delete (sf::CircleShape*) hitShape;
 }
+
 Hitbox::Hitbox(float* shapeInfo, int _shapeType, bool _isVisible) : shapeType(_shapeType), isVisible(_isVisible){
 	if (shapeType == 0) {
 		hitShape = new sf::CircleShape(shapeInfo[2]);

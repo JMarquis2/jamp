@@ -4,7 +4,6 @@
 class Enemy : public Unit {
 
 protected:
-	int enemyHP;
 	int enemyAtk;
 	sf::Color color;
 
