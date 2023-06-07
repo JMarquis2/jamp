@@ -15,9 +15,6 @@ Enemy::Enemy(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 50.
 	dimensions.x = 150.f;
 	dimensions.y = 150.f;
 	//this->getHitbox()->getHitShape()->setPosition(sf::Vector2f(50.f, 0.f));
-	
-
-
 }
 
 
