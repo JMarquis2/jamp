@@ -42,7 +42,9 @@ float entityToEntityAngle(sf::Vector2f entityPos, sf::Vector2f entity2Pos) {
     else
         angle = 2 * PI - (-1.f * atan2((float)distance.y, -1 * (float)distance.x));
     return (angle * 180.f / PI);
+
 }
+
 bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list<Obstacle*>* obstacles, sf::RenderWindow* window) {
     if (mover->getIdle()) {
         return false;
