@@ -33,6 +33,8 @@ int main()
     //currently set to 1/12 of a second. Customizable...
     sf::Time spriteUpdateTimer = sf::seconds(0.0833333f);
     sf::Time spriteUpdateElapsed;
+    sf::Time enemyCollisionElapsed = sf::seconds(0.0f);
+    sf::Time enemyUpdateElapsed;
     
     // shapes to test with 
     
@@ -153,6 +155,7 @@ int main()
             elapsed = currTime - prevTime;
             prevTime = currTime;
             spriteUpdateElapsed += elapsed;
+            enemyUpdateElapsed += elapsed;
 
             //check for button presses
             while (window.pollEvent(event))
@@ -212,6 +215,20 @@ int main()
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
             movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles, & window);
             
+            //Enemy Collison Timer and Damages player
+            if (collides(&testDude, &badDude)) {               
+                if(enemyUpdateElapsed >= enemyCollisionElapsed) {
+                    enemyUpdateElapsed -= enemyCollisionElapsed;
+                    testDude.takeDamage(20);
+                    enemyCollisionElapsed = sf::seconds(1.5f);
+                    std::cout << testDude.getCurrHP();
+                    if (testDude.getCurrHP() <= 0) {
+                        return 0;
+                    }
+
+                }
+            }
+            
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
                 spriteUpdateElapsed -= spriteUpdateTimer;
@@ -245,13 +262,12 @@ int main()
             //this isnt working for some reason?? nevermind im dumb
             window.draw(hedge);
             window.draw(testgrass1);
-
+            window.draw(badDude);
             //loop through hits
             for (auto it = hits.begin(); it != hits.end(); it++) {
                 window.draw(**it);
             }
             window.draw(testDude);
-            window.draw(badDude);
             window.setView(view);
             window.display();
         }
