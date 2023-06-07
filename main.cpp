@@ -246,12 +246,12 @@ int main()
             window.draw(hedge);
             window.draw(testgrass1);
 
+            window.draw(badDude);
             //loop through hits
             for (auto it = hits.begin(); it != hits.end(); it++) {
                 window.draw(**it);
             }
             window.draw(testDude);
-            window.draw(badDude);
             window.setView(view);
             window.display();
         }
