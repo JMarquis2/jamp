@@ -10,8 +10,8 @@ public:
 	bool collidesWith(Interactable* other);
 	~Interactable();
 	//one for circular hitbox, one for rectangular
-	Interactable(sf::Vector2f _position, float hitboxRadius, bool visibleHitbox = false);
-	Interactable(sf::Vector2f _position, float hitboxWidth, float hitboxHeight, bool visibleHitbox = false);
+	Interactable(sf::Vector2f _position, float hitboxRadius, sf::Vector2f hitboxDisplacement = sf::Vector2f(0.f, 0.f), bool visibleHitbox = false);
+	Interactable(sf::Vector2f _position, float hitboxWidth, float hitboxHeight, sf::Vector2f hitboxDisplacement = sf::Vector2f(0.f, 0.f), bool visibleHitbox = false);
 	Interactable();
 	Hitbox* getHitbox() const;
 	void importTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo);
@@ -36,7 +36,7 @@ private:
 	sf::Vector2i texturePosition;
 	sf::Vertex* model;
 	int modelSize;
-
+protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 

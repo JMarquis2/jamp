@@ -6,9 +6,9 @@ class Entity : public Interactable
 public:
 	 ~Entity();
 	 Entity();
-	 Entity(sf::Vector2f _position, float radius, float _speed, float _directionAngle, bool visibleHitbox = false);
-	 Entity(sf::Vector2f _position, float hitboxWidth, float hitboxHeight, float _speed, float _directionAngle, bool visibleHitbox = false);
-	 void moveToPosition(sf::Vector2f position);
+	 Entity(sf::Vector2f _position, float radius, float _speed, float _directionAngle, sf::Vector2f hitboxDisplacement = sf::Vector2f(0.f, 0.f), bool visibleHitbox = false);
+	 Entity(sf::Vector2f _position, float hitboxWidth, float hitboxHeight, float _speed, float _directionAngle, sf::Vector2f hitboxDisplacement = sf::Vector2f(0.f, 0.f), bool visibleHitbox = false);
+	 virtual void moveToPosition(sf::Vector2f position);
 
 	 float getSpeed();
 	 float getAngle();

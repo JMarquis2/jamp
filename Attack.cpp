@@ -1,7 +1,7 @@
 #include "Attack.h"
 #include "moves.h"
 #include <vector>
-Attack::Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f hitPosition, float width, float height) : Entity(hitPosition, width, height, 0.f, angle, false), damage(_damage), remainingTime(_remainingTime) {
+Attack::Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f hitPosition, float width, float height) : Entity(hitPosition, width, height, 0.f, angle, sf::Vector2f(0.f, 0.f), false), damage(_damage), remainingTime(_remainingTime) {
 	std::vector<int> cardinals = angleToCardinals(angle);
 	sf::Vertex* model = new sf::Vertex[4];
 	//up

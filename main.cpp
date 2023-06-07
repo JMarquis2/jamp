@@ -262,6 +262,7 @@ int main()
             //this isnt working for some reason?? nevermind im dumb
             window.draw(hedge);
             window.draw(testgrass1);
+
             window.draw(badDude);
             //loop through hits
             for (auto it = hits.begin(); it != hits.end(); it++) {
