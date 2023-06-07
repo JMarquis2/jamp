@@ -54,5 +54,5 @@ void Obstacle::setTexture(std::pair<std::vector<int>*, sf::Texture*> textureInfo
 
 		}
 	}
-	setTextureModel(model, rows * columns * 4);
+	setModel(model, rows * columns * 4);
 }

@@ -33,8 +33,6 @@ float cardinalsToAngle(int* cardinals) {
         angle = 2 * PI - (-1.f * atan2((float)ydiff, (float)xdiff));
     return (angle * 180.f / PI);
 }
-
-
 float entityToEntityAngle(sf::Vector2f entityPos, sf::Vector2f entity2Pos) {
     sf::Vector2f distance = entityPos - entity2Pos;
     float angle = 0.f;

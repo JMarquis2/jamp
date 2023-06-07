@@ -21,7 +21,7 @@ public:
 	sf::Vector2i getTextureDimensions();
 	std::vector<int>* getFrameNumbers();
 	sf::Vertex* getModel();
-	void setTextureModel(sf::Vertex* _model, int _modelSize);
+	void setModel(sf::Vertex* _model, int _modelSize);
 	sf::Texture* getTexture();
 private:
 	//hitbox stuff?

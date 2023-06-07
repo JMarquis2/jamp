@@ -78,6 +78,7 @@ bool collidesRectRect(sf::RectangleShape* first, sf::RectangleShape* second) {
 	float ymaxF = firstBounds.top;
 	float yminS = secondBounds.top + secondBounds.height;
 	float ymaxS = secondBounds.top;
+
 	if ((((xmaxF < xmaxS) && (xmaxF > xminS)) || ((xminF < xmaxS) && (xminF > xminS))) && (((ymaxF < yminS) && (yminF > yminS)) || ((ymaxS < yminF) && (ymaxS > ymaxF))))
 		return true;
 	else
