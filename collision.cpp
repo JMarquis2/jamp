@@ -79,10 +79,16 @@ bool collidesRectRect(sf::RectangleShape* first, sf::RectangleShape* second) {
 	float yminS = secondBounds.top + secondBounds.height;
 	float ymaxS = secondBounds.top;
 
-	if ((((xmaxF < xmaxS) && (xmaxF > xminS)) || ((xminF < xmaxS) && (xminF > xminS))) && (((ymaxF < yminS) && (yminF > yminS)) || ((ymaxS < yminF) && (ymaxS > ymaxF))))
+	if((xminF > xmaxS) || (xmaxF < xminS) || (ymaxF > yminS) || (yminF < ymaxS))
+		return false;
+	else
+		return true;
+	/*
+	if ((((xmaxF < xmaxS) && (xmaxF > xminS)) || ((xminF < xmaxS) && (xminF > xminS))) && (((ymaxF > ymaxS) && (ymaxF < yminS)) || ((yminF > ymaxS) && (yminF < yminS))))
 		return true;
 	else
 		return false;
+	*/
 }
 bool collidesCircSprite(sf::CircleShape* circ, sf::Sprite* sprite) {
 	return false;
