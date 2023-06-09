@@ -83,12 +83,6 @@ bool collidesRectRect(sf::RectangleShape* first, sf::RectangleShape* second) {
 		return false;
 	else
 		return true;
-	/*
-	if ((((xmaxF < xmaxS) && (xmaxF > xminS)) || ((xminF < xmaxS) && (xminF > xminS))) && (((ymaxF > ymaxS) && (ymaxF < yminS)) || ((yminF > ymaxS) && (yminF < yminS))))
-		return true;
-	else
-		return false;
-	*/
 }
 bool collidesCircSprite(sf::CircleShape* circ, sf::Sprite* sprite) {
 	return false;

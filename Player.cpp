@@ -4,9 +4,9 @@
 #include <iostream>
 Player::~Player() {
 }
-Player::Player() : Unit(100.f, 100.f, 5.f, 5.f, sf::Vector2f(0.f, 0.f), 50.f, 100.f, 100.f, 0.f, true, sf::Vector2f(25.f, 50.f), false), color(sf::Color::Cyan), attackPower(25) {
+Player::Player() : Unit(100.f, 100.f, 5.f, 5.f, sf::Vector2f(0.f, 0.f), 50.f, 100.f, 100.f, 0.f, true, sf::Vector2f(25.f, 50.f), false), color(sf::Color::Cyan), attackPower(20) {
 }
-Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 25.f, 50.f, 0.f, true, sf::Vector2f(25.f, 50.f), true), color(sf::Color::Cyan), attackPower(25) {
+Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 25.f, 50.f, 0.f, true, sf::Vector2f(25.f, 50.f), true), color(sf::Color::Cyan), attackPower(20) {
 	//temporary? this should probably be done in another way...
 	dimensions.x = 100.f;
 	dimensions.y = 100.f;

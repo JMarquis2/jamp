@@ -23,6 +23,7 @@ public:
 	sf::Vertex* getModel();
 	void setModel(sf::Vertex* _model, int _modelSize);
 	sf::Texture* getTexture();
+	int getID();
 private:
 	//hitbox stuff?
 	Hitbox* hitbox;
@@ -38,5 +39,6 @@ private:
 	int modelSize;
 protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	int id;
 };
 

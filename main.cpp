@@ -17,6 +17,7 @@
 #include "Wall.h"
 #include "Terrain.h"
 #include "Attack.h"
+#include "IDGenerator.h"
 
 int main()
 {
@@ -50,7 +51,8 @@ int main()
     wall2.setPosition(500, 100);
     wall2.setFillColor(sf::Color::Blue);
  
-
+    IDGenerator idManager;
+    IDGenerator::setID(0);
     //example:use texturemanager
 
     //first, add all texture names to vector. Eventually, this could even be read from a file.
@@ -214,16 +216,26 @@ int main()
             //loop through physics stuff...
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
             movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles, & window);
-            
-            //Enemy Collison Timer and Damages player
-            if (collides(&testDude, &badDude)) {               
+
+            //collisions between hits and anything that can be hit
+            for (auto it = hits.begin(); it != hits.end(); it++) {
+                if (collides(*it, &badDude)) {
+                    if (!(*it)->hits(&badDude)) {
+                        delete (*it);
+                        it = hits.erase(it);
+                        if (it == hits.end())
+                            break;
+                    }
+                }
+            }
+            if (collides(&testDude, &badDude)) {
                 if(enemyUpdateElapsed >= enemyCollisionElapsed) {
                     enemyUpdateElapsed -= enemyCollisionElapsed;
                     testDude.takeDamage(20);
                     enemyCollisionElapsed = sf::seconds(1.5f);
                     std::cout << testDude.getCurrHP();
                     if (testDude.getCurrHP() <= 0) {
-                        return 0;
+                        window.close();
                     }
 
                 }
@@ -251,7 +263,7 @@ int main()
 
             //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
             //std::cout << testDude.getHitbox()->getHitShape()->getPosition().y << std::endl;
-
+            std::cout << badDude.getCurrHP() << std::endl;
             //draw our drawable objects
 
             window.draw(grassyTerrain);

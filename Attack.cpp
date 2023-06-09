@@ -1,7 +1,10 @@
 #include "Attack.h"
+#include "Obstacle.h"
+#include "Unit.h"
 #include "moves.h"
 #include <vector>
-Attack::Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f hitPosition, float width, float height) : Entity(hitPosition, width, height, 0.f, angle, sf::Vector2f(0.f, 0.f), false), damage(_damage), remainingTime(_remainingTime) {
+//#include <typeinfo>
+Attack::Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f hitPosition, float width, float height) : Entity(hitPosition, width, height, 0.f, angle, sf::Vector2f(0.f, 0.f), false), damage(_damage), remainingTime(_remainingTime), passThroughObstacles(true), piercing(true) {
 	std::vector<int> cardinals = angleToCardinals(angle);
 	sf::Vertex* model = new sf::Vertex[4];
 	//up
@@ -59,4 +62,25 @@ bool Attack::update(sf::Time elapsed) {
 	if (remainingTime <= sf::milliseconds(0))
 		return false;
 	return true;
+}
+bool Attack::hits(Unit* target) {
+	//this is the case where the attack is already hitting the target.
+	if (currentlyHitting.find((*target).getID()) != currentlyHitting.end()) {
+		return true;
+	}
+	//this is the case where the attack is hitting the target for the first time.
+	else {
+		currentlyHitting.insert((*target).getID());
+		((Unit*)target)->takeDamage(damage);
+		if (piercing)
+			return true;
+		else
+			return false;
+	}
+}
+bool Attack::hits(Obstacle* target) {
+	return passThroughObstacles;
+}
+int Attack::getDamage() {
+	return damage;
 }
