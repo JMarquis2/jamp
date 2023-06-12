@@ -10,7 +10,7 @@ Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 2
 	dimensions.x = 100.f;
 	dimensions.y = 100.f;
 }
-Attack* Player::hit(sf::Time elapsed) {
+Attack* Player::hit() {
 	if (attackTimer >= sf::seconds(0.f))
 		return nullptr;
 	std::vector<int> cardinals = angleToCardinals(this->getAngle());

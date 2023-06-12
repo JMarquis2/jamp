@@ -183,7 +183,7 @@ int main()
                         direction[3] = 1;
                     }
                     if (event.key.code == sf::Keyboard::Space) {
-                        Attack* hit = testDude.hit(elapsed); 
+                        Attack* hit = testDude.hit(); 
                         if(hit)
                             hits.push_back(hit);
                     }

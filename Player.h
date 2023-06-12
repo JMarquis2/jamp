@@ -16,7 +16,7 @@ public:
 	~Player();
 	Player();
 	Player(sf::Vector2f position);
-	Attack* hit(sf::Time elapsed);
+	Attack* hit();
 	//update debuffs, buffs, attack timers, cooldowns, anything time-related...?
 	void update(sf::Time elapsed);
 };
