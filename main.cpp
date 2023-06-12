@@ -221,12 +221,12 @@ int main()
             //loop through enemies and make them face and move towards the player...
             for (auto it = enemies.begin(); it != enemies.end(); it++) {
                 (*it)->setAngle(entityToEntityAngle((*it)->getPosition(), testDude.getPosition()));
-                movesWithCollision((*it), badDude.getAngle(), &elapsed, &obstacles, &window);
+                movesWithCollision((*it), badDude.getAngle(), &elapsed, &obstacles);
             }
 
             //loop through physics stuff...
-            movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
-            //movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles, & window);
+            movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles);
+            //movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles);
 
             //collisions between hits and anything that can be hit
             for (auto hitsIter = hits.begin(); hitsIter != hits.end(); hitsIter++) {
