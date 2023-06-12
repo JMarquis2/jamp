@@ -102,6 +102,9 @@ int main()
     std::list<std::pair<sf::CircleShape*, float*>> independents;
     std::list<std::list<std::pair<sf::CircleShape*, float*>>::iterator> deleteReady;
     std::list<Obstacle*> obstacles;
+    std::list<Enemy*> enemies;
+
+    enemies.push_back(&badDude);
     obstacles.push_back(&hedge);
 
     int* direction{ new int[4]{ 0, 0, 0, 0 } };
@@ -140,7 +143,6 @@ int main()
                 for (int i = 0; i < 4; i++)
                     prevDirection[i] = direction[i];
                 testDude.setIdle(false);
-                badDude.setIdle(false);
 
             }
             else {
@@ -148,7 +150,7 @@ int main()
            
             }
             testDude.setAngle(cardinalsToAngle(prevDirection));
-            badDude.setAngle(entityToEntityAngle(badDude.getPosition(), testDude.getPosition()));
+
             //update view
             view.setCenter(testDude.getPosition());
 
@@ -181,7 +183,9 @@ int main()
                         direction[3] = 1;
                     }
                     if (event.key.code == sf::Keyboard::Space) {
-                        hits.push_back(testDude.hit());
+                        Attack* hit = testDude.hit(elapsed); 
+                        if(hit)
+                            hits.push_back(hit);
                     }
                     if (!menuOpen) {
                         if (event.key.code == sf::Keyboard::Q)
@@ -209,38 +213,58 @@ int main()
                 speed = 0;
 
             //iterate through game logic
+            testDude.update(elapsed);
 
             //clear the window, prepare to draw sprites
             window.clear(sf::Color::White);
 
+            //loop through enemies and make them face and move towards the player...
+            for (auto it = enemies.begin(); it != enemies.end(); it++) {
+                (*it)->setAngle(entityToEntityAngle((*it)->getPosition(), testDude.getPosition()));
+                movesWithCollision((*it), badDude.getAngle(), &elapsed, &obstacles, &window);
+            }
+
             //loop through physics stuff...
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
-            movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles, & window);
+            //movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles, & window);
 
             //collisions between hits and anything that can be hit
-            for (auto it = hits.begin(); it != hits.end(); it++) {
-                if (collides(*it, &badDude)) {
-                    if (!(*it)->hits(&badDude)) {
-                        delete (*it);
-                        it = hits.erase(it);
-                        if (it == hits.end())
-                            break;
+            for (auto hitsIter = hits.begin(); hitsIter != hits.end(); hitsIter++) {
+                for (auto enemiesIter = enemies.begin(); enemiesIter != enemies.end(); enemiesIter++) {
+                    if (collides(*hitsIter, *enemiesIter)) {
+                        if (!(*hitsIter)->hits(*enemiesIter)) {
+                            delete (*hitsIter);
+                            hitsIter = hits.erase(hitsIter);
+                            if (hitsIter == hits.end())
+                                break;
+                        }
                     }
                 }
             }
-            if (collides(&testDude, &badDude)) {
-                if(enemyUpdateElapsed >= enemyCollisionElapsed) {
-                    enemyUpdateElapsed -= enemyCollisionElapsed;
-                    testDude.takeDamage(20);
-                    enemyCollisionElapsed = sf::seconds(1.5f);
-                    std::cout << testDude.getCurrHP();
-                    if (testDude.getCurrHP() <= 0) {
-                        window.close();
+            //check collisions between player and enemies
+            for (auto it = enemies.begin(); it != enemies.end(); it++) {
+                if (collides(&testDude, *it)) {
+                    if (enemyUpdateElapsed >= enemyCollisionElapsed) {
+                        enemyUpdateElapsed -= enemyCollisionElapsed;
+                        testDude.takeDamage(20);
+                        enemyCollisionElapsed = sf::seconds(1.5f);
+                        std::cout << testDude.getCurrHP();
+                        if (testDude.getCurrHP() <= 0) {
+                            window.close();
+                        }
                     }
-
                 }
             }
             
+            //check if people are dead...
+            for (auto it = enemies.begin(); it != enemies.end(); it++) {
+                if ((*it)->isDead()) {
+                    it = enemies.erase(it);
+                    if (it == enemies.end())
+                        break;
+                }
+            }
+
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
                 spriteUpdateElapsed -= spriteUpdateTimer;
@@ -258,12 +282,13 @@ int main()
                             break;
                     }
                 }
-                badDude.updateTexture();
+                //update enemy textures
+                for (auto it = enemies.begin(); it != enemies.end(); it++) {
+                    (*it)->updateTexture();
+                }
             }
-
-            //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
-            //std::cout << testDude.getHitbox()->getHitShape()->getPosition().y << std::endl;
-            std::cout << badDude.getCurrHP() << std::endl;
+            if(!badDude.isDead())
+                std::cout << badDude.getCurrHP() << std::endl;
             //draw our drawable objects
 
             window.draw(grassyTerrain);
@@ -275,7 +300,10 @@ int main()
             window.draw(hedge);
             window.draw(testgrass1);
 
-            window.draw(badDude);
+            //draw enemies
+            for (auto it = enemies.begin(); it != enemies.end(); it++) {
+                window.draw(**it);
+            }
             //loop through hits
             for (auto it = hits.begin(); it != hits.end(); it++) {
                 window.draw(**it);

@@ -15,6 +15,7 @@ public:
 	float takeDamage(float damage);
 	void regen(float seconds);
 	void moveToPosition(sf::Vector2f position);
+	bool isDead();
 
 private:
 	//additional potential stats like damage, armor, mr, cdr, whatever...

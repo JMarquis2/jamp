@@ -63,6 +63,7 @@ bool Attack::update(sf::Time elapsed) {
 		return false;
 	return true;
 }
+//hits functions return false if attack should be deleted
 bool Attack::hits(Unit* target) {
 	//this is the case where the attack is already hitting the target.
 	if (currentlyHitting.find((*target).getID()) != currentlyHitting.end()) {
