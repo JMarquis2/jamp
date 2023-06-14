@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Interactable.h"
-
+bool checkAngledRects(std::vector<sf::Vector2f>* first, std::vector<sf::Vector2f>* second);
 bool collidesRectCirc(sf::RectangleShape* rect, sf::CircleShape* circ);
 bool collidesRectSprite(sf::RectangleShape* rect, sf::Sprite* sprite);
 bool collidesRectRect(sf::RectangleShape* first, sf::RectangleShape* second);

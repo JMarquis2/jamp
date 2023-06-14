@@ -8,6 +8,7 @@ public:
 	sf::Shape* getHitShape() const;
 	int getShapeType();
 	bool getVisible();
+	void setVisible(bool visible);
 private:
 	sf::Shape* hitShape;
 	int shapeType;

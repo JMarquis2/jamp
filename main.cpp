@@ -37,8 +37,7 @@ int main()
     sf::Time enemyCollisionElapsed = sf::seconds(0.0f);
     sf::Time enemyUpdateElapsed;
     
-    // shapes to test with 
-    
+    // shapes to test with  
     sf::CircleShape shape2(65.0f);
     shape2.setPosition(400, 400);
     shape2.setFillColor(sf::Color::Cyan);
@@ -248,7 +247,6 @@ int main()
                         enemyUpdateElapsed -= enemyCollisionElapsed;
                         testDude.takeDamage(20);
                         enemyCollisionElapsed = sf::seconds(1.5f);
-                        std::cout << testDude.getCurrHP();
                         if (testDude.getCurrHP() <= 0) {
                             window.close();
                         }
@@ -287,8 +285,8 @@ int main()
                     (*it)->updateTexture();
                 }
             }
-            if(!badDude.isDead())
-                std::cout << badDude.getCurrHP() << std::endl;
+            if (!badDude.isDead())
+                int nothing = 0;
             //draw our drawable objects
 
             window.draw(grassyTerrain);
