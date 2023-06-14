@@ -76,6 +76,8 @@ int main()
 
     Wall hedge(sf::Vector2f(500.f, 500.f), 200, 30);
     hedge.setTexture(texmachine.getTextureInfo("Hedge"), sf::Vector2i(0, 0));
+    hedge.getHitbox()->getHitShape()->rotate(45.f);
+    hedge.getHitbox()->setVisible(true);
 
     Terrain grassyTerrain(sf::Vector2f(0.f, 0.f), 1000, 1000);
     grassyTerrain.setTexture(texmachine.getTextureInfo("grass"));

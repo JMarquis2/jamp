@@ -29,62 +29,89 @@ bool collidesRectCirc(sf::RectangleShape* rect, sf::CircleShape* circ) {
 	float circleRadius = circ->getRadius();
 	circleCenter.x = circ->getPosition().x + circleRadius;
 	circleCenter.y = circ->getPosition().y + circleRadius;
-	float rectTop = rect->getGlobalBounds().top;
-	float rectBot = rect->getGlobalBounds().top + rect->getGlobalBounds().height;
-	float rectLeft = rect->getGlobalBounds().left;
-	float rectRight = rect->getGlobalBounds().left + rect->getGlobalBounds().width;
+	//if rectangle is axis aligned...
+	if (abs(rect->getRotation()) <= 0.00001f) {
+		float rectTop = rect->getGlobalBounds().top;
+		float rectBot = rect->getGlobalBounds().top + rect->getGlobalBounds().height;
+		float rectLeft = rect->getGlobalBounds().left;
+		float rectRight = rect->getGlobalBounds().left + rect->getGlobalBounds().width;
 
-	//RECTANGLE_CIRCLE_COLLISION
-	//problem: sticky corners
-//inside
-if (((circleCenter.x > rectLeft) && (circleCenter.x < rectRight)) && ((circleCenter.y > rectTop) && circleCenter.y < rectBot))
-	return true;
-//above
-if ((circleCenter.y - rectTop <= 0) && (circleCenter.x - rectLeft >= 0) && (circleCenter.x - rectRight <= 0))
-if (rectTop - circleCenter.y - circleRadius <= 0.001f)
-return true;
+		//RECTANGLE_CIRCLE_COLLISION
+		//problem: sticky corners
+		//inside
+		if (((circleCenter.x > rectLeft) && (circleCenter.x < rectRight)) && ((circleCenter.y > rectTop) && circleCenter.y < rectBot))
+			return true;
+		//above
+		if ((circleCenter.y - rectTop <= 0) && (circleCenter.x - rectLeft >= 0) && (circleCenter.x - rectRight <= 0))
+			if (rectTop - circleCenter.y - circleRadius <= 0.001f)
+				return true;
 
-//left
-if ((circleCenter.x - rectLeft <= 0) && (circleCenter.y - rectTop >= 0) && (circleCenter.y - rectBot <= 0))
-if (rectLeft - circleCenter.x - circleRadius <= 0.001f)
-return true;
-//right
-if ((circleCenter.x - rectRight >= 0) && (circleCenter.y - rectTop >= 0) && (circleCenter.y - rectBot <= 0))
-if (circleCenter.x - rectRight - circleRadius <= 0.001f)
-return true;
-//under
-if ((circleCenter.y - rectBot >= 0) && (circleCenter.x - rectLeft >= 0) && (circleCenter.x - rectRight <= 0))
-if (circleCenter.y - rectBot - circleRadius <= 0.001f)
-return true;
-//upper-right
-if ((circleCenter.x - rectRight >= 0) && (circleCenter.y - rectTop <= 0)) {
-	if (sqrt(pow(circleCenter.x - rectRight, 2) + pow(rectTop - circleCenter.y, 2)) <= circleRadius) {
-		return true;
+		//left
+		if ((circleCenter.x - rectLeft <= 0) && (circleCenter.y - rectTop >= 0) && (circleCenter.y - rectBot <= 0))
+			if (rectLeft - circleCenter.x - circleRadius <= 0.001f)
+				return true;
+		//right
+		if ((circleCenter.x - rectRight >= 0) && (circleCenter.y - rectTop >= 0) && (circleCenter.y - rectBot <= 0))
+			if (circleCenter.x - rectRight - circleRadius <= 0.001f)
+				return true;
+		//under
+		if ((circleCenter.y - rectBot >= 0) && (circleCenter.x - rectLeft >= 0) && (circleCenter.x - rectRight <= 0))
+			if (circleCenter.y - rectBot - circleRadius <= 0.001f)
+				return true;
+		//upper-right
+		if ((circleCenter.x - rectRight >= 0) && (circleCenter.y - rectTop <= 0)) {
+			if (sqrt(pow(circleCenter.x - rectRight, 2) + pow(rectTop - circleCenter.y, 2)) <= circleRadius) {
+				return true;
+			}
+		}
+		//upper-left
+		if ((circleCenter.x - rectLeft <= 0) && (circleCenter.y - rectTop <= 0)) {
+			if (sqrt(pow(circleCenter.x - rectLeft, 2) + pow(rectTop - circleCenter.y, 2)) <= circleRadius) {
+				return true;
+			}
+		}
+		//lower-right
+		if ((circleCenter.x - rectRight >= 0) && (circleCenter.y - rectBot >= 0)) {
+			if (sqrt(pow(circleCenter.x - rectRight, 2) + pow(rectBot - circleCenter.y, 2)) <= circleRadius) {
+				return true;
+			}
+		}
+		//lower-left
+		if ((circleCenter.x - rectLeft <= 0) && (circleCenter.y - rectBot >= 0)) {
+			if (sqrt(pow(circleCenter.x - rectLeft, 2) + pow(rectBot - circleCenter.y, 2)) <= circleRadius) {
+				return true;
+			}
+		}
+		return false;
 	}
+	//so the rectangle isn't axis-aligned...
+	std::vector<sf::Vector2f> rectPoints;
+	for (int i = 0; i < 4; i++) {
+		sf::Vector2f pointPos;
+		pointPos.x = rect->getTransform().transformPoint(rect->getPoint(i)).x;
+		pointPos.y = rect->getTransform().transformPoint(rect->getPoint(i)).y;
+		rectPoints.push_back(pointPos);
+	}
+	for (int i = 0; i < 4; i++) {
+		//check corner
+		if (sqrt(pow((circleCenter.x - rectPoints[i].x), 2) + pow(circleCenter.y - rectPoints[i].y, 2)) <= circleRadius) {
+			return true;
+		}
+		//check side
+		sf::Vector2f edgeBackwards = rectPoints[i] - rectPoints[(i + 1) % 4];
+		sf::Vector2f edgeForwards = rectPoints[(i + 1) % 4] - rectPoints[i];
+		//check if circle lies between rectpoint[i] and rectpoint[i + 1] using dot products
+		if ((edgeForwards.x * (circleCenter.x - rectPoints[i].x) + edgeForwards.y * (circleCenter.y - rectPoints[i].y) >= 0.00001f) &&
+			(edgeBackwards.x * (circleCenter.x - rectPoints[(i + 1) % 4].x) + edgeBackwards.y * (circleCenter.y - rectPoints[(i + 1) % 4].y) >= 0.00001f)) {
+			float slope = edgeForwards.y / edgeForwards.x;
+			sf::Vector2f closestPoint;
+			closestPoint.x = ((circleCenter.x / slope) + circleCenter.y - rectPoints[i].y + slope * rectPoints[i].x) / ((slope * slope + 1) / slope);
+			closestPoint.y = (slope) * (closestPoint.x - rectPoints[i].x) + rectPoints[i].y;
 
-}
-
-//upper-left
-if ((circleCenter.x - rectLeft <= 0) && (circleCenter.y - rectTop <= 0)) {
-	if (sqrt(pow(circleCenter.x - rectLeft, 2) + pow(rectTop - circleCenter.y, 2)) <= circleRadius) {
-		return true;
+			if (sqrt(pow((circleCenter.x - closestPoint.x), 2) + pow(circleCenter.y - closestPoint.y, 2)) <= circleRadius)
+				return true;
+		}
 	}
-}
-//lower-right
-if ((circleCenter.x - rectRight >= 0) && (circleCenter.y - rectBot >= 0)) {
-	if (sqrt(pow(circleCenter.x - rectRight, 2) + pow(rectBot - circleCenter.y, 2)) <= circleRadius) {
-		return true;
-	}
-}
-//lower-left
-if ((circleCenter.x - rectLeft <= 0) && (circleCenter.y - rectBot >= 0)) {
-	if (sqrt(pow(circleCenter.x - rectLeft, 2) + pow(rectBot - circleCenter.y, 2)) <= circleRadius) {
-		return true;
-	}
-}
-return false;
-}
-bool collidesRectSprite(sf::RectangleShape* rect, sf::Sprite* sprite) {
 	return false;
 }
 bool collidesRectRect(sf::RectangleShape* first, sf::RectangleShape* second) {
@@ -116,9 +143,7 @@ bool collidesRectRect(sf::RectangleShape* first, sf::RectangleShape* second) {
 		pointPos.x = first->getTransform().transformPoint(first->getPoint(i)).x;
 		pointPos.y = first->getTransform().transformPoint(first->getPoint(i)).y;
 		firstPoints.push_back(pointPos);
-	}
-	for (int i = 0; i < 4; i++) {
-		sf::Vector2f pointPos;
+
 		pointPos.x = second->getTransform().transformPoint(second->getPoint(i)).x;
 		pointPos.y = second->getTransform().transformPoint(second->getPoint(i)).y;
 		secondPoints.push_back(pointPos);
@@ -129,9 +154,6 @@ bool collidesRectRect(sf::RectangleShape* first, sf::RectangleShape* second) {
 		return false;
 	return true;
 }
-bool collidesCircSprite(sf::CircleShape* circ, sf::Sprite* sprite) {
-	return false;
-}
 bool collidesCircCirc(sf::CircleShape* first, sf::CircleShape* second) {
 	float fRadius = first->getRadius();
 	float sRadius = second->getRadius();
@@ -141,9 +163,6 @@ bool collidesCircCirc(sf::CircleShape* first, sf::CircleShape* second) {
 		return true;
 	else
 		return false;
-}
-bool collidesSpriteSprite(sf::Sprite*first , sf::Sprite*second) {
-	return false;
 }
 bool collides(sf::Shape* first, sf::Shape* second) {
 	//if first is a rectangle shape...
