@@ -20,7 +20,7 @@ void Entity::setAngle(float _angle) {
     directionAngle = _angle;
 }
 void Entity::setAngle(int* directions) {
-    directionAngle = cardinalsToAngle(directions);
+    setAngle(cardinalsToAngle(directions));
 }
 void Entity::setIdle(bool _isIdle) {
     isIdle = _isIdle;
