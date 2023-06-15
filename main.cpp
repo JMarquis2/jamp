@@ -18,6 +18,8 @@
 #include "Terrain.h"
 #include "Attack.h"
 #include "IDGenerator.h"
+#include "collisionChecking.h"
+#include "checkDeaths.h"
 
 int main()
 {
@@ -76,8 +78,6 @@ int main()
 
     Wall hedge(sf::Vector2f(500.f, 500.f), 200, 30);
     hedge.setTexture(texmachine.getTextureInfo("Hedge"), sf::Vector2i(0, 0));
-    hedge.getHitbox()->getHitShape()->rotate(45.f);
-    hedge.getHitbox()->setVisible(true);
 
     Terrain grassyTerrain(sf::Vector2f(0.f, 0.f), 1000, 1000);
     grassyTerrain.setTexture(texmachine.getTextureInfo("grass"));
@@ -112,7 +112,6 @@ int main()
     int* prevDirection{ new int[4]{0, 0, 0, 0} };
 
     std::list<Attack*> hits;
-    std::list<Attack*> deleteHits;
 
     //up, down, left, right
     float speed = 500.f;
@@ -219,51 +218,13 @@ int main()
             //clear the window, prepare to draw sprites
             window.clear(sf::Color::White);
 
-            //loop through enemies and make them face and move towards the player...
-            for (auto it = enemies.begin(); it != enemies.end(); it++) {
-                (*it)->setAngle(entityToEntityAngle((*it)->getPosition(), testDude.getPosition()));
-                movesWithCollision((*it), badDude.getAngle(), &elapsed, &obstacles);
-            }
-
-            //loop through physics stuff...
+            //move entities, check collisions and deaths...
+            moveEntities(&testDude, (std::list<Entity*>*) &enemies, elapsed, &obstacles);
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles);
-            //movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles);
-
-            //collisions between hits and anything that can be hit
-            for (auto hitsIter = hits.begin(); hitsIter != hits.end(); hitsIter++) {
-                for (auto enemiesIter = enemies.begin(); enemiesIter != enemies.end(); enemiesIter++) {
-                    if (collides(*hitsIter, *enemiesIter)) {
-                        if (!(*hitsIter)->hits(*enemiesIter)) {
-                            delete (*hitsIter);
-                            hitsIter = hits.erase(hitsIter);
-                            if (hitsIter == hits.end())
-                                break;
-                        }
-                    }
-                }
-            }
-            //check collisions between player and enemies
-            for (auto it = enemies.begin(); it != enemies.end(); it++) {
-                if (collides(&testDude, *it)) {
-                    if (enemyUpdateElapsed >= enemyCollisionElapsed) {
-                        enemyUpdateElapsed -= enemyCollisionElapsed;
-                        testDude.takeDamage(20);
-                        enemyCollisionElapsed = sf::seconds(1.5f);
-                        if (testDude.getCurrHP() <= 0) {
-                            window.close();
-                        }
-                    }
-                }
-            }
-            
-            //check if people are dead...
-            for (auto it = enemies.begin(); it != enemies.end(); it++) {
-                if ((*it)->isDead()) {
-                    it = enemies.erase(it);
-                    if (it == enemies.end())
-                        break;
-                }
-            }
+            checkCollisions(&testDude, &hits, &obstacles, &enemies, elapsed);
+            checkDeaths(&enemies);
+            if (testDude.isDead())
+                window.close();
 
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
