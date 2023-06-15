@@ -12,6 +12,7 @@ public:
 	~Player();
 	Player();
 	Player(sf::Vector2f position);
+	void updateTexturePlayer(bool isIdle);
 	Attack* hit();
 };
 

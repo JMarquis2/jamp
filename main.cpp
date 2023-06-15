@@ -12,6 +12,7 @@
 #include "Hitbox.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "enemyMage.h"
 #include "TextureManager.h"
 #include <iostream>
 #include "Wall.h"
@@ -61,6 +62,9 @@ int main()
     textureNames.push_back("ground");
     textureNames.push_back("grass");
     textureNames.push_back("cobble");
+    textureNames.push_back("Knight_Sheet_Rocco");
+    textureNames.push_back("Orc_Sheet_Rocco");
+
 
     //then, construct texturemanager using vector.
     TextureManager texmachine(textureNames);
@@ -68,9 +72,9 @@ int main()
     //if you want to add another texture, you could also call importTexture(name);
 
     Player testDude(sf::Vector2f(0.f, 0.f));
-    testDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
+    testDude.setTexture(texmachine.getTextureInfo("Knight_Sheet_Rocco"), sf::Vector2i(0, 0));
     
-    Enemy badDude(sf::Vector2f(0.f, 0.f));
+    enemyMage badDude(sf::Vector2f(0.f, 0.f));
     badDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
 
     Wall hedge(sf::Vector2f(500.f, 500.f), 200, 30);
@@ -107,6 +111,13 @@ int main()
 
     std::list<Attack*> hits;
     std::list<Attack*> deleteHits;
+    std::list<missileAttack*> mageMissiles;
+    std::list<missileAttack*> tempMissiles = badDude.homingMissile();
+
+    for (auto it = tempMissiles.begin(); it != tempMissiles.end(); it++) {
+        mageMissiles.push_back(*it);
+
+    }
 
     //up, down, left, right
     float speed = 500.f;
@@ -214,12 +225,14 @@ int main()
             //loop through physics stuff...
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles, &window);
             movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles, & window);
+
             
             //Enemy Collison Timer and Damages player
             if (collides(&testDude, &badDude)) {               
                 if(enemyUpdateElapsed >= enemyCollisionElapsed) {
                     enemyUpdateElapsed -= enemyCollisionElapsed;
                     testDude.takeDamage(20);
+
                     enemyCollisionElapsed = sf::seconds(1.5f);
                     std::cout << testDude.getCurrHP();
                     if (testDude.getCurrHP() <= 0) {
@@ -227,17 +240,28 @@ int main()
                     }
 
                 }
-            }
-            
+            } 
+
+
+
+
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
                 spriteUpdateElapsed -= spriteUpdateTimer;
                 /*
                 loop through every animated object, run "update sprite" function
                 */
-                testDude.updateTexture();
+                testDude.updateTexturePlayer(testDude.getIdle());
                 
                 //update hits
+
+                for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
+                    (*it)->setIdle(false);               
+                    movesWithCollision(*it, entityToEntityAngle((*it)->getPosition(), testDude.getPosition()), &elapsed, &obstacles, &window);
+                        
+                }
+
+
                 for (auto it = hits.begin(); it != hits.end(); it++) {
                     if (!((*it)->update(spriteUpdateTimer))) {
                         delete (*it);
@@ -247,7 +271,17 @@ int main()
                     }
                 }
                 badDude.updateTexture();
+
+                
             }
+                for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
+                    (*it)->setIdle(false);
+                
+                    movesWithCollision(*it, entityToEntityAngle((*it)->getPosition(), testDude.getPosition()), &elapsed, &obstacles, &window);
+                   
+     
+                }
+
 
             //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
             //std::cout << testDude.getHitbox()->getHitShape()->getPosition().y << std::endl;
@@ -265,6 +299,10 @@ int main()
 
             window.draw(badDude);
             //loop through hits
+            for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
+                window.draw(**it);
+            }
+
             for (auto it = hits.begin(); it != hits.end(); it++) {
                 window.draw(**it);
             }

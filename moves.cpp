@@ -80,6 +80,5 @@ bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list
             break;
         }
     }
-    window->draw(*mover);
     return collided;
 }
