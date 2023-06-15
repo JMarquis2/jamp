@@ -1,9 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <list>
-#include "Entity.h"
-#include "Obstacle.h"
-#include "Player.h"
+#include "../Classes/Entity.h"
+#include "../Classes/Obstacle.h"
+#include "../Classes/Player.h"
 //up down left right
 
 std::vector<int> angleToCardinals(float angle);

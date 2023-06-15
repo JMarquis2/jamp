@@ -3,23 +3,23 @@
 #include <math.h>
 #include <vector>
 #include <list>
-#include "collision.h"
+#include "Helpers/collision.h"
 #include <utility>
 #include <iterator>
-#include "moves.h"
-#include "Entity.h"
-#include "Interactable.h"
-#include "Hitbox.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "TextureManager.h"
+#include "Helpers/moves.h"
+#include "Classes/Entity.h"
+#include "Classes/Interactable.h"
+#include "Classes/Hitbox.h"
+#include "Classes/Player.h"
+#include "Classes/Enemy.h"
+#include "Helpers/TextureManager.h"
 #include <iostream>
-#include "Wall.h"
-#include "Terrain.h"
-#include "Attack.h"
-#include "IDGenerator.h"
-#include "collisionChecking.h"
-#include "checkDeaths.h"
+#include "Classes/Wall.h"
+#include "Classes/Terrain.h"
+#include "Classes/Attack.h"
+#include "Helpers/IDGenerator.h"
+#include "Helpers/collisionChecking.h"
+#include "Helpers/checkDeaths.h"
 
 int main()
 {

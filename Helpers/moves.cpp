@@ -2,9 +2,9 @@
 #include "collision.h"
 #include <SFML/Graphics.hpp>
 #include <iterator>
-#include "Entity.h"
+#include "../Classes/Entity.h"
 #include <math.h>
-#include "Player.h"
+#include "../Classes/Player.h"
 //moveInfo is a 5-length array which contains first the directions being traveled, then the speed.
 #define PI 3.14159265f
 

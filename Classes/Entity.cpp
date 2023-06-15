@@ -1,6 +1,6 @@
 #include "Entity.h"
 #include "Interactable.h"
-#include "moves.h"
+#include "../Helpers/moves.h"
 #include <iostream>
 Entity::~Entity() {
 }

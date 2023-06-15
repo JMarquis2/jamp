@@ -1,6 +1,6 @@
 #include "Player.h"
 #include <cmath>
-#include "moves.h"
+#include "../Helpers/moves.h"
 #include <iostream>
 Player::~Player() {
 }
