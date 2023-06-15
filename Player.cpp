@@ -4,14 +4,15 @@
 #include <iostream>
 Player::~Player() {
 }
-Player::Player() : Unit(100.f, 100.f, 5.f, 5.f, sf::Vector2f(0.f, 0.f), 50.f, 100.f, 100.f, 0.f, true, sf::Vector2f(25.f, 50.f), false), color(sf::Color::Cyan), attackPower(25) {
+Player::Player() : Unit(100.f, 100.f, 5.f, 5.f, sf::Vector2f(0.f, 0.f), 50.f, 100.f, 100.f, 0.f, true, sf::Vector2f(25.f, 50.f), false), color(sf::Color::Cyan), attackPower(20), attackSpeed(sf::seconds(0.2f)), attackTimer(sf::seconds(0.f)) {
 }
-Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 25.f, 50.f, 0.f, true, sf::Vector2f(25.f, 50.f), true), color(sf::Color::Cyan), attackPower(25) {
-	//temporary? this should probably be done in another way...
+Player::Player(sf::Vector2f position) : Unit(100.f, 100.f, 5.f, 5.f, position, 25.f, 50.f, 0.f, true, sf::Vector2f(25.f, 50.f), true), color(sf::Color::Cyan), attackPower(20), attackSpeed(sf::seconds(0.2f)), attackTimer(sf::seconds(0.f)) {
 	dimensions.x = 100.f;
 	dimensions.y = 100.f;
 }
 Attack* Player::hit() {
+	if (attackTimer >= sf::seconds(0.f))
+		return nullptr;
 	std::vector<int> cardinals = angleToCardinals(this->getAngle());
 
 	float hitWidth = 0;
@@ -46,5 +47,9 @@ Attack* Player::hit() {
 		hitPosition.y += 25;
 	}
 	Attack* tempAttack = new Attack(attackPower, sf::milliseconds(100), this->getAngle(), hitPosition, hitWidth, hitHeight);
+	attackTimer = attackSpeed;
 	return tempAttack;
+}
+void Player::update(sf::Time elapsed) {
+	attackTimer -= elapsed;
 }

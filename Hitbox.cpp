@@ -37,3 +37,6 @@ int Hitbox::getShapeType() {
 bool Hitbox::getVisible() {
 	return isVisible;
 }
+void Hitbox::setVisible(bool visible) {
+	isVisible = visible;
+}

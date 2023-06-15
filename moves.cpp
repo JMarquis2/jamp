@@ -45,7 +45,7 @@ float entityToEntityAngle(sf::Vector2f entityPos, sf::Vector2f entity2Pos) {
 
 }
 
-bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list<Obstacle*>* obstacles, sf::RenderWindow* window) {
+bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list<Obstacle*>* obstacles) {
     if (mover->getIdle()) {
         return false;
     }
@@ -80,6 +80,5 @@ bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list
             break;
         }
     }
-    window->draw(*mover);
     return collided;
 }

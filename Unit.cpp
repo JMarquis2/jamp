@@ -19,8 +19,9 @@ Unit::Unit(float _maxHP, float _maxMana, float _hpRegen, float _manaRegen, sf::V
 }
 float Unit::takeDamage(float damage) {
 	currHP -= damage;
-	if (currHP <= 0)
-		return 0.f;
+	if (currHP <= 0.0000001f) {
+		currHP = 0.f;
+	}
 	healthbar->setCurrent(currHP);
 	return currHP;
 }
@@ -38,6 +39,9 @@ void Unit::regen(float seconds) {
 void Unit::moveToPosition(sf::Vector2f position) {
 	healthbar->move(sf::Vector2f(this->getHitbox()->getHitShape()->getPosition().x , position.y + dimensions.y + 3));
 	Entity::moveToPosition(position);
+}
+bool Unit::isDead() {
+		return (abs(currHP) <= 0.0000001);
 }
 
 void Unit::draw(sf::RenderTarget& target, sf::RenderStates states) const {

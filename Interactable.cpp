@@ -1,5 +1,6 @@
 #include "Interactable.h"
 #include "collision.h"
+#include "IDGenerator.h"
 #include "moves.h"
 Interactable::~Interactable() {
 	delete hitbox;
@@ -9,6 +10,7 @@ Interactable::Interactable() {
 	float tempInfo[] = { 0.f, 0.f, 10.f };
 	hitbox = new Hitbox(tempInfo, 0);
 	this->setPosition(0.f, 0.f);
+	id = IDGenerator::getID();
 }
 Interactable::Interactable(sf::Vector2f _position, float hitboxRadius, sf::Vector2f hitboxDisplacement, bool visibleHitbox) {
 	float hitInfo[3];
@@ -18,6 +20,7 @@ Interactable::Interactable(sf::Vector2f _position, float hitboxRadius, sf::Vecto
 	hitbox = new Hitbox(hitInfo, 0, visibleHitbox);
 	hitbox->getHitShape()->setPosition(sf::Vector2f(_position.x + hitboxDisplacement.x, _position.y + hitboxDisplacement.y));
 	this->setPosition(_position);
+	id = IDGenerator::getID();
 }
 Interactable::Interactable(sf::Vector2f _position, float hitboxWidth, float hitboxHeight, sf::Vector2f hitboxDisplacement, bool visibleHitbox) {
 	float hitInfo[4];
@@ -28,6 +31,7 @@ Interactable::Interactable(sf::Vector2f _position, float hitboxWidth, float hitb
 	hitbox = new Hitbox(hitInfo, 1, visibleHitbox);
 	hitbox->getHitShape()->setPosition(sf::Vector2f(_position.x + hitboxDisplacement.x, _position.y + hitboxDisplacement.y));
 	this->setPosition(_position);
+	id = IDGenerator::getID();
 }
 bool Interactable::collidesWith(Interactable* other) {
 	return collides(this->hitbox->getHitShape(), other->hitbox->getHitShape());
@@ -82,6 +86,9 @@ sf::Texture* Interactable::getTexture() {
 }
 sf::Vertex* Interactable::getModel() {
 	return model;
+}
+int Interactable::getID() {
+	return id;
 }
 void Interactable::setModel(sf::Vertex* _model, int _modelSize) {
 	model = _model;

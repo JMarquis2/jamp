@@ -29,10 +29,10 @@ bool Entity::getIdle() {
     return isIdle;
 }
 Entity::Entity(sf::Vector2f _position, float hitboxRadius, float _speed, float _directionAngle, sf::Vector2f hitboxDisplacement, bool visibleHitbox) :
-    speed(_speed), directionAngle(_directionAngle), isIdle(true), Interactable(_position, hitboxRadius, hitboxDisplacement, visibleHitbox) {
+    speed(_speed), directionAngle(_directionAngle), isIdle(false), Interactable(_position, hitboxRadius, hitboxDisplacement, visibleHitbox) {
 }
 Entity::Entity(sf::Vector2f _position, float hitboxWidth, float hitboxHeight, float _speed, float _directionAngle, sf::Vector2f hitboxDisplacement, bool visibleHitbox) :
-    speed(_speed), directionAngle(_directionAngle), isIdle(true), Interactable(_position, hitboxWidth, hitboxHeight, hitboxDisplacement, visibleHitbox) {
+    speed(_speed), directionAngle(_directionAngle), isIdle(false), Interactable(_position, hitboxWidth, hitboxHeight, hitboxDisplacement, visibleHitbox) {
 }
 void Entity::moveToPosition(sf::Vector2f position) {
     sf::Vector2f posDiff(this->getPosition());
