@@ -52,7 +52,6 @@ Attack* Player::hit() {
 }
 void Player::update(sf::Time elapsed) {
 	attackTimer -= elapsed;
-	return tempAttack;
 }
 
 void Player::updateTexturePlayer(bool isIdle) {
