@@ -4,15 +4,16 @@
 #include <unordered_set>
 class Attack : public Entity {
 public:
-	Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f hitPosition, float width, float height);
+	Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f hitPosition, float width, float height, float speed, sf::Vector2f hitboxDisplacement, bool visibleHitbox);
+	Attack(int _damage, sf::Time _remainingTime, sf::Vector2f hitPosition, float angle, float radius, float speed, sf::Vector2f hitBoxDisplacement, bool visibleHitbox); //circluar attacks for future work
 
 	//returns false if deletable
-	bool update(sf::Time elapsed);
+	virtual bool update(sf::Time elapsed);
+
 	int getDamage();
-
-	//returns false if deletable
 	bool hits(Unit* target);
 	bool hits(Obstacle* target);
+
 private:
 	bool passThroughObstacles;
 	bool piercing;
