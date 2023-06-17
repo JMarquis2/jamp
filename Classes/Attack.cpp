@@ -8,7 +8,10 @@
 #define PI 3.14159265f
 
 //rectangular constructor
-Attack::Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f hitPosition, float width, float height, float speed, sf::Vector2f hitboxDisplacement, bool visibleHitbox) : Entity(hitPosition, width, height, speed, angle, hitboxDisplacement, visibleHitbox), damage(_damage), remainingTime(_remainingTime) {
+Attack::Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f hitPosition, float width, float height, float speed, bool _passing, bool _piercing,
+	sf::Vector2f hitboxDisplacement, bool visibleHitbox) : 
+	Entity(hitPosition, width, height, speed, angle, hitboxDisplacement, visibleHitbox), damage(_damage), remainingTime(_remainingTime), passThroughObstacles(_passing), piercing(_piercing) {
+
 	std::vector<int> cardinals = angleToCardinals(angle);
 	sf::Vertex* model = new sf::Vertex[4];
 	//up
@@ -63,8 +66,9 @@ Attack::Attack(int _damage, sf::Time _remainingTime, float angle, sf::Vector2f h
 }
 
 //circular constructor 
-Attack::Attack(int _damage, sf::Time _remainingTime, sf::Vector2f hitPosition, float angle, float radius, float speed, sf::Vector2f hitBoxDisplacement, bool visibleHitbox) : Entity(hitPosition, radius, speed, angle, hitBoxDisplacement, visibleHitbox), damage(_damage), remainingTime(_remainingTime) {
-
+Attack::Attack(int _damage, sf::Time _remainingTime, sf::Vector2f hitPosition, float angle, float radius, float speed, bool _passing, bool _piercing,
+	sf::Vector2f hitBoxDisplacement, bool visibleHitbox) : 
+	Entity(hitPosition, radius, speed, angle, hitBoxDisplacement, visibleHitbox), damage(_damage), remainingTime(_remainingTime), passThroughObstacles(_passing), piercing(_piercing) {
 	
 	int numVertices = 50; 
 	sf::Vertex* model = new sf::Vertex[numVertices];

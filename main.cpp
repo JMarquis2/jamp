@@ -37,8 +37,6 @@ int main()
     //currently set to 1/12 of a second. Customizable...
     sf::Time spriteUpdateTimer = sf::seconds(0.0833333f);
     sf::Time spriteUpdateElapsed;
-    sf::Time enemyCollisionElapsed = sf::seconds(0.0f);
-    sf::Time enemyUpdateElapsed;
     
     // shapes to test with  
     sf::CircleShape shape2(65.0f);
@@ -170,7 +168,6 @@ int main()
             elapsed = currTime - prevTime;
             prevTime = currTime;
             spriteUpdateElapsed += elapsed;
-            enemyUpdateElapsed += elapsed;
 
             //check for button presses
             while (window.pollEvent(event))
@@ -225,15 +222,31 @@ int main()
 
             //iterate through game logic
             testDude.update(elapsed);
+            for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
+                (*it)->setIdle(false);
+                movesWithCollision(*it, entityToEntityAngle((*it)->getPosition(), testDude.getPosition()), &elapsed, &obstacles);
+            }
+            for (auto it = hits.begin(); it != hits.end(); it++) {
+                if (!((*it)->update(elapsed))) {
+                    delete (*it);
+                    it = hits.erase(it);
+                    if (it == hits.end())
+                        break;
+                }
+            }
 
             //clear the window, prepare to draw sprites
             window.clear(sf::Color::White);
 
             //move entities, check collisions and deaths...
             moveEntities(&testDude, (std::list<Entity*>*) &enemies, elapsed, &obstacles);
+            moveEntities(&testDude, (std::list<Entity*>*) &mageMissiles, elapsed, &obstacles);
+
             movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles);
+
             checkCollisions(&testDude, &hits, &obstacles, &enemies, elapsed);
             checkDeaths(&enemies);
+
             if (testDude.isDead())
                 window.close();
 
@@ -242,41 +255,12 @@ int main()
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
                 spriteUpdateElapsed -= spriteUpdateTimer;
-                /*
-                loop through every animated object, run "update sprite" function
-                */
-                testDude.updateTexturePlayer(testDude.getIdle());
-                
-                //update hits
-
-                for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
-                    (*it)->setIdle(false);               
-                    movesWithCollision(*it, entityToEntityAngle((*it)->getPosition(), testDude.getPosition()), &elapsed, &obstacles);
-                        
-                }
-
-
-                for (auto it = hits.begin(); it != hits.end(); it++) {
-                    if (!((*it)->update(spriteUpdateTimer))) {
-                        delete (*it);
-                        it = hits.erase(it);
-                        if (it == hits.end())
-                            break;
-                    }
-                }
-                //update enemy textures
+                //loop through every animated object, run "update texture" function
+                testDude.updateTexture();
                 for (auto it = enemies.begin(); it != enemies.end(); it++) {
                     (*it)->updateTexture();
                 }
             }
-            if (!badDude.isDead())
-                int nothing = 0;                
-            for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
-                (*it)->setIdle(false);
-                
-                movesWithCollision(*it, entityToEntityAngle((*it)->getPosition(), testDude.getPosition()), &elapsed, &obstacles);
-            }
-
 
             //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
             //std::cout << testDude.getHitbox()->getHitShape()->getPosition().y << std::endl;

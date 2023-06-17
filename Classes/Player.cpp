@@ -46,7 +46,7 @@ Attack* Player::hit() {
 		hitPosition.x += 100;
 		hitPosition.y += 25;
 	}
-	Attack* tempAttack = new Attack(attackPower, sf::milliseconds(100), this->getAngle(), hitPosition, hitWidth, hitHeight, 0, sf::Vector2f(0, 0), false);
+	Attack* tempAttack = new Attack(attackPower, sf::milliseconds(100), this->getAngle(), hitPosition, hitWidth, hitHeight, 0, true, true, sf::Vector2f(0, 0), false);
 	attackTimer = attackSpeed;
 	return tempAttack;
 }
@@ -54,9 +54,9 @@ void Player::update(sf::Time elapsed) {
 	attackTimer -= elapsed;
 }
 
-void Player::updateTexturePlayer(bool isIdle) {
+void Player::updateTexture() {
 	//right now this is how I'll deal with idle animation. In the future, we would have an idle animation, too.
-	if (isIdle) {
+	if (getIdle()) {
 		return;
 	}
 	std::vector<int> facing = angleToCardinals(this->getAngle());
