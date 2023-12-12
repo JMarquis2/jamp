@@ -2,8 +2,9 @@
 #include "collision.h"
 #include <SFML/Graphics.hpp>
 #include <iterator>
-#include "Entity.h"
+#include "../Classes/Entity.h"
 #include <math.h>
+#include "../Classes/Player.h"
 //moveInfo is a 5-length array which contains first the directions being traveled, then the speed.
 #define PI 3.14159265f
 
@@ -81,4 +82,10 @@ bool movesWithCollision(Entity* mover, float angle, sf::Time* elapsed, std::list
         }
     }
     return collided;
+}
+void moveEntities(Player* player, std::list<Entity*>* entities, sf::Time elapsed, std::list<Obstacle*>* obstacles) {
+    for (auto it = entities->begin(); it != entities->end(); it++) {
+        (*it)->setAngle(entityToEntityAngle((*it)->getPosition(), player->getPosition()));
+        movesWithCollision((*it), (*it)->getAngle(), &elapsed, obstacles);
+    }
 }

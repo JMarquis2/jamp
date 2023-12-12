@@ -1,7 +1,7 @@
 #include "Interactable.h"
-#include "collision.h"
-#include "IDGenerator.h"
-#include "moves.h"
+#include "../Helpers/collision.h"
+#include "../Helpers/IDGenerator.h"
+#include "../Helpers/moves.h"
 Interactable::~Interactable() {
 	delete hitbox;
 	delete[] model;

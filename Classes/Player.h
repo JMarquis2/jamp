@@ -16,6 +16,7 @@ public:
 	~Player();
 	Player();
 	Player(sf::Vector2f position);
+	void updateTexturePlayer(bool isIdle);
 	Attack* hit();
 	//update debuffs, buffs, attack timers, cooldowns, anything time-related...?
 	void update(sf::Time elapsed);

@@ -3,21 +3,24 @@
 #include <math.h>
 #include <vector>
 #include <list>
-#include "collision.h"
+#include "Helpers/collision.h"
 #include <utility>
 #include <iterator>
-#include "moves.h"
-#include "Entity.h"
-#include "Interactable.h"
-#include "Hitbox.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "TextureManager.h"
+#include "Helpers/moves.h"
+#include "Classes/Entity.h"
+#include "Classes/Interactable.h"
+#include "Classes/Hitbox.h"
+#include "Classes/Player.h"
+#include "Classes/Enemy.h"
+#include "Helpers/TextureManager.h"
+#include "Classes/enemyMage.h"
 #include <iostream>
-#include "Wall.h"
-#include "Terrain.h"
-#include "Attack.h"
-#include "IDGenerator.h"
+#include "Classes/Wall.h"
+#include "Classes/Terrain.h"
+#include "Classes/Attack.h"
+#include "Helpers/IDGenerator.h"
+#include "Helpers/collisionChecking.h"
+#include "Helpers/checkDeaths.h"
 
 int main()
 {
@@ -62,6 +65,9 @@ int main()
     textureNames.push_back("ground");
     textureNames.push_back("grass");
     textureNames.push_back("cobble");
+    textureNames.push_back("Knight_Sheet_Rocco");
+    textureNames.push_back("Orc_Sheet_Rocco");
+
 
     //then, construct texturemanager using vector.
     TextureManager texmachine(textureNames);
@@ -69,15 +75,13 @@ int main()
     //if you want to add another texture, you could also call importTexture(name);
 
     Player testDude(sf::Vector2f(0.f, 0.f));
-    testDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
+    testDude.setTexture(texmachine.getTextureInfo("Knight_Sheet_Rocco"), sf::Vector2i(0, 0));
     
-    Enemy badDude(sf::Vector2f(0.f, 0.f));
+    enemyMage badDude(sf::Vector2f(0.f, 0.f));
     badDude.setTexture(texmachine.getTextureInfo("player_knight"), sf::Vector2i(0, 0));
 
     Wall hedge(sf::Vector2f(500.f, 500.f), 200, 30);
     hedge.setTexture(texmachine.getTextureInfo("Hedge"), sf::Vector2i(0, 0));
-    hedge.getHitbox()->getHitShape()->rotate(45.f);
-    hedge.getHitbox()->setVisible(true);
 
     Terrain grassyTerrain(sf::Vector2f(0.f, 0.f), 1000, 1000);
     grassyTerrain.setTexture(texmachine.getTextureInfo("grass"));
@@ -112,7 +116,13 @@ int main()
     int* prevDirection{ new int[4]{0, 0, 0, 0} };
 
     std::list<Attack*> hits;
-    std::list<Attack*> deleteHits;
+
+    std::list<missileAttack*> mageMissiles;
+    std::list<missileAttack*> tempMissiles = badDude.homingMissile();
+
+    for (auto it = tempMissiles.begin(); it != tempMissiles.end(); it++) {
+        mageMissiles.push_back(*it);
+    }
 
     //up, down, left, right
     float speed = 500.f;
@@ -219,51 +229,15 @@ int main()
             //clear the window, prepare to draw sprites
             window.clear(sf::Color::White);
 
-            //loop through enemies and make them face and move towards the player...
-            for (auto it = enemies.begin(); it != enemies.end(); it++) {
-                (*it)->setAngle(entityToEntityAngle((*it)->getPosition(), testDude.getPosition()));
-                movesWithCollision((*it), badDude.getAngle(), &elapsed, &obstacles);
-            }
+            //move entities, check collisions and deaths...
+            moveEntities(&testDude, (std::list<Entity*>*) &enemies, elapsed, &obstacles);
+            movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles);
+            checkCollisions(&testDude, &hits, &obstacles, &enemies, elapsed);
+            checkDeaths(&enemies);
+            if (testDude.isDead())
+                window.close();
 
             //loop through physics stuff...
-            movesWithCollision(&testDude, cardinalsToAngle(prevDirection), &elapsed, &obstacles);
-            //movesWithCollision(&badDude, entityToEntityAngle(badDude.getPosition(),testDude.getPosition()), & elapsed, & obstacles);
-
-            //collisions between hits and anything that can be hit
-            for (auto hitsIter = hits.begin(); hitsIter != hits.end(); hitsIter++) {
-                for (auto enemiesIter = enemies.begin(); enemiesIter != enemies.end(); enemiesIter++) {
-                    if (collides(*hitsIter, *enemiesIter)) {
-                        if (!(*hitsIter)->hits(*enemiesIter)) {
-                            delete (*hitsIter);
-                            hitsIter = hits.erase(hitsIter);
-                            if (hitsIter == hits.end())
-                                break;
-                        }
-                    }
-                }
-            }
-            //check collisions between player and enemies
-            for (auto it = enemies.begin(); it != enemies.end(); it++) {
-                if (collides(&testDude, *it)) {
-                    if (enemyUpdateElapsed >= enemyCollisionElapsed) {
-                        enemyUpdateElapsed -= enemyCollisionElapsed;
-                        testDude.takeDamage(20);
-                        enemyCollisionElapsed = sf::seconds(1.5f);
-                        if (testDude.getCurrHP() <= 0) {
-                            window.close();
-                        }
-                    }
-                }
-            }
-            
-            //check if people are dead...
-            for (auto it = enemies.begin(); it != enemies.end(); it++) {
-                if ((*it)->isDead()) {
-                    it = enemies.erase(it);
-                    if (it == enemies.end())
-                        break;
-                }
-            }
 
             //loop to update sprite animations -- runs 12 times per second
             if (spriteUpdateElapsed >= spriteUpdateTimer) {
@@ -271,9 +245,17 @@ int main()
                 /*
                 loop through every animated object, run "update sprite" function
                 */
-                testDude.updateTexture();
+                testDude.updateTexturePlayer(testDude.getIdle());
                 
                 //update hits
+
+                for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
+                    (*it)->setIdle(false);               
+                    movesWithCollision(*it, entityToEntityAngle((*it)->getPosition(), testDude.getPosition()), &elapsed, &obstacles);
+                        
+                }
+
+
                 for (auto it = hits.begin(); it != hits.end(); it++) {
                     if (!((*it)->update(spriteUpdateTimer))) {
                         delete (*it);
@@ -288,7 +270,17 @@ int main()
                 }
             }
             if (!badDude.isDead())
-                int nothing = 0;
+                int nothing = 0;                
+            for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
+                (*it)->setIdle(false);
+                
+                movesWithCollision(*it, entityToEntityAngle((*it)->getPosition(), testDude.getPosition()), &elapsed, &obstacles);
+            }
+
+
+            //std::cout << "testDude hitbox pos: " << testDude.getHitbox()->getHitShape()->getPosition().x << " ";
+            //std::cout << testDude.getHitbox()->getHitShape()->getPosition().y << std::endl;
+
             //draw our drawable objects
 
             window.draw(grassyTerrain);
@@ -305,6 +297,10 @@ int main()
                 window.draw(**it);
             }
             //loop through hits
+            for (auto it = mageMissiles.begin(); it != mageMissiles.end(); it++) {
+                window.draw(**it);
+            }
+
             for (auto it = hits.begin(); it != hits.end(); it++) {
                 window.draw(**it);
             }

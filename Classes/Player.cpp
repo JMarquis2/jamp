@@ -1,6 +1,6 @@
 #include "Player.h"
 #include <cmath>
-#include "moves.h"
+#include "../Helpers/moves.h"
 #include <iostream>
 Player::~Player() {
 }
@@ -40,16 +40,46 @@ Attack* Player::hit() {
 		hitPosition.y += 25;
 	}
 	//right
-	else if (cardinals[3] == 1){
+	else if (cardinals[3] == 1) {
 		hitWidth = 100;
 		hitHeight = 50;
 		hitPosition.x += 100;
 		hitPosition.y += 25;
 	}
-	Attack* tempAttack = new Attack(attackPower, sf::milliseconds(100), this->getAngle(), hitPosition, hitWidth, hitHeight);
+	Attack* tempAttack = new Attack(attackPower, sf::milliseconds(100), this->getAngle(), hitPosition, hitWidth, hitHeight, 0, sf::Vector2f(0, 0), false);
 	attackTimer = attackSpeed;
 	return tempAttack;
 }
 void Player::update(sf::Time elapsed) {
 	attackTimer -= elapsed;
+}
+
+void Player::updateTexturePlayer(bool isIdle) {
+	//right now this is how I'll deal with idle animation. In the future, we would have an idle animation, too.
+	if (isIdle) {
+		return;
+	}
+	std::vector<int> facing = angleToCardinals(this->getAngle());
+	int newX = 0;
+	int newY = 0;
+	sf::Vector2i dimensions = getTextureDimensions();
+	//left
+	if (facing[2] == 1) {
+		newY = 0;
+	}
+	// right
+	else if (facing[3] == 1) {
+		newY = 1;
+	}
+	// up
+	else if (facing[0] == 1) {
+		newY = 2;
+	}
+	//down
+	else {
+		newY = 3;
+	}
+	newX = (getTexturePosition().x + dimensions.x) % (getFrameNumbers()->at(newY) * dimensions.x);
+	newY *= dimensions.y;
+	setTextureCoords(sf::Vector2i(newX, newY));
 }
